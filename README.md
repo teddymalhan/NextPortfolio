@@ -1,259 +1,99 @@
-# Portfolio Website
+# NextPortfolio
 
-A modern, responsive personal portfolio website built with Next.js 16, React 19, and Tailwind CSS. Features stunning animations, interactive UI components, and a beautiful design system powered by Radix UI and Framer Motion.
+![Portfolio](public/Portfolio.png)
 
-![Portfolio Preview](https://img.shields.io/badge/Next.js-16.0.7-black?style=flat-square&logo=next.js)
-![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue?style=flat-square&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.17-38bdf8?style=flat-square&logo=tailwind-css)
+A Sleek Next.js Portfolio Website inspired by Cluely
 
-## ✨ Features
+NextPortfolio is Teddy Malhan's personal portfolio site. It showcases projects, experience, and contact information with rich animations and an accessible component system. It is built on the Next.js App Router with Turbopack, and ships theme switching, form validation, and integrated analytics out of the box.
 
-- 🎨 **Modern Design** - Clean, professional interface with smooth animations
-- 📱 **Fully Responsive** - Optimized for desktop, tablet, and mobile devices
-- 🌗 **Dark/Light Mode** - Theme switching with `next-themes`
-- ⚡ **High Performance** - Built on Next.js 16 with App Router and Turbopack
-- 🎭 **Rich Animations** - Powered by Framer Motion and GSAP
-- 🎯 **Type-Safe** - Full TypeScript support
-- 📝 **Form Validation** - Contact forms with `react-hook-form` and Zod
-- 🎨 **Shadcn/ui Components** - Beautiful, accessible UI components
-- 📊 **Analytics Ready** - Integrated with Vercel Analytics
-- 🎉 **Interactive Elements** - Animated backgrounds, floating shapes, and tech mascots
+## Table of Contents
 
-## 🚀 Tech Stack
+- [Background](#background)
+- [Install](#install)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Maintainers](#maintainers)
+- [Acknowledgements](#acknowledgements)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Core
+## Background
 
-- **Framework:** [Next.js 16](https://nextjs.org/) - React framework with App Router and Turbopack
-- **Language:** [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
-- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) - Utility-first CSS framework
+The project exists as a single-page portfolio that demonstrates current front-end practices: the App Router for routing, Radix UI primitives for accessibility, Framer Motion and GSAP for motion, and React Hook Form with Zod for validated contact submissions. It is intended both as a personal site and as a reference implementation for similar portfolios.
 
-### UI Components & Animations
+See Also:
 
-- **UI Library:** [Radix UI](https://www.radix-ui.com/) - Headless UI components
-- **Animations:** [Framer Motion](https://www.framer.com/motion/) & [GSAP](https://gsap.com/)
-- **Icons:** [Lucide React](https://lucide.dev/) & [Font Awesome](https://fontawesome.com/)
-- **Component Variants:** [Class Variance Authority](https://cva.style/)
-
-### Forms & Validation
-
-- **Form Management:** [React Hook Form](https://react-hook-form.com/)
-- **Validation:** [Zod](https://zod.dev/)
-- **Resolvers:** [@hookform/resolvers](https://github.com/react-hook-form/resolvers)
-
-### Additional Libraries
-
-- **Theme Management:** [next-themes](https://github.com/pacocoursey/next-themes)
-- **Notifications:** [Sonner](https://sonner.emilkowal.ski/)
-- **Confetti Effects:** [react-canvas-confetti](https://github.com/ulrichstark/react-canvas-confetti)
-- **Analytics:** [Vercel Analytics](https://vercel.com/analytics)
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** 18.0 or later ([Download](https://nodejs.org/))
-- **pnpm** (recommended) or npm
-  ```bash
-  # Install pnpm globally
-  npm install -g pnpm
-  ```
-
-## 🛠️ Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/teddymalhan/teddy-portfolio-rebuild.git
-   cd teddy-portfolio-rebuild
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   pnpm install
-   # or
-   npm install
-   ```
-
-3. **Set up environment variables** (if needed)
-   ```bash
-   cp .env.example .env.local
-   ```
-   Add any required environment variables for contact forms, analytics, etc.
-
-## 🚀 Running the Application
-
-### Development Mode
-
-Start the development server with hot-reload:
-
-```bash
-pnpm dev
-# or
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
-
-### Production Build
-
-Build the application for production:
-
-```bash
-pnpm build
-# or
-npm run build
-```
-
-### Start Production Server
-
-Run the production build locally:
-
-```bash
-pnpm start
-# or
-npm run start
-```
-
-### Linting
-
-Check code quality with ESLint:
-
-```bash
-pnpm lint
-# or
-npm run lint
-```
-
-## 📁 Project Structure
-
-```
-teddy-portfolio-rebuild/
-├── app/                      # Next.js App Router
-│   ├── globals.css          # Global styles
-│   ├── layout.tsx           # Root layout
-│   └── page.tsx             # Home page
-├── components/              # React components
-│   ├── about.tsx            # About section
-│   ├── animated-background.tsx
-│   ├── contact.tsx          # Contact form
-│   ├── experience.tsx       # Experience timeline
-│   ├── floating-elements.tsx
-│   ├── floating-shapes.tsx
-│   ├── hero.tsx             # Hero section
-│   ├── navigation.tsx       # Navigation bar
-│   ├── projects-bento.tsx   # Projects bento grid
-│   ├── projects.tsx         # Projects section
-│   ├── tech-mascots.tsx     # Animated tech icons
-│   ├── fancy/               # Advanced components
-│   │   └── text/
-│   └── ui/                  # Shadcn/ui components
-├── lib/                     # Utility functions
-│   └── utils.ts
-├── public/                  # Static assets
-│   ├── *.jpg, *.png        # Project images
-│   └── Teddy_Malhan_Resume.pdf
-├── styles/                  # Additional styles
-└── package.json            # Dependencies
-```
-
-## 🎨 Customization
-
-### Personal Information
-
-Update the content in the following components:
-
-- `components/hero.tsx` - Your name, title, and introduction
-- `components/about.tsx` - About me section
-- `components/experience.tsx` - Work experience
-- `components/projects-bento.tsx` - Portfolio projects
-- `components/contact.tsx` - Contact information
-
-### Theme & Colors
-
-Customize the design system in:
-
-- `app/globals.css` - CSS variables and global styles
-- `tailwind.config.js` - Tailwind configuration (if exists)
-- `components/theme-provider.tsx` - Theme settings
-
-### Add New Components
-
-Place new components in the `components/` directory and import them in `app/page.tsx`.
-
-## 🚢 Deployment
-
-### Deploy to Vercel (Recommended)
-
-The easiest way to deploy your Next.js app:
-
-1. Push your code to GitHub
-2. Visit [vercel.com](https://vercel.com)
-3. Import your repository
-4. Vercel will automatically detect Next.js and deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
-### Deploy to Netlify
-
-```bash
-# Install Netlify CLI
-npm install -g netlify-cli
-
-# Build and deploy
-pnpm build
-netlify deploy --prod
-```
-
-### Deploy to GitHub Pages
-
-Update `next.config.mjs` for static export:
-
-```javascript
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "export",
-  images: {
-    unoptimized: true,
-  },
-};
-
-export default nextConfig;
-```
-
-## 📝 Available Scripts
-
-| Command      | Description                                |
-| ------------ | ------------------------------------------ |
-| `pnpm dev`   | Start development server at localhost:3000 |
-| `pnpm build` | Create optimized production build          |
-| `pnpm start` | Start production server                    |
-| `pnpm lint`  | Run ESLint for code quality checks         |
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/teddymalhan/v0-portfolio-rebuild/issues).
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 👤 Author
-
-**Teddy Malhan**
-
-- GitHub: [@teddymalhan](https://github.com/teddymalhan)
-- Portfolio: [Your Portfolio URL]
-
-## 🙏 Acknowledgments
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS](https://tailwindcss.com)
+- [Next.js](https://nextjs.org/)
 - [Radix UI](https://www.radix-ui.com/)
-- [Shadcn/ui](https://ui.shadcn.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+
+## Install
+
+This project uses [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/). Please make sure they are installed locally.
+
+```sh
+git clone https://github.com/teddymalhan/teddy-portfolio-rebuild.git
+cd teddy-portfolio-rebuild
+pnpm install
+```
+
+### Dependencies
+
+- Node.js 18.0 or later
+- pnpm (or npm)
+
+Optional environment variables for analytics, blob storage, database, and authentication may be configured in `.env.local`. See the imports of `@vercel/analytics`, `@vercel/blob`, `@neondatabase/serverless`, and `@clerk/nextjs` for details.
+
+## Usage
+
+Start the development server:
+
+```sh
+pnpm dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
+
+Build and run a production bundle:
+
+```sh
+pnpm build
+pnpm start
+```
+
+### CLI
+
+The project exposes the standard Next.js scripts via `pnpm`:
+
+```sh
+pnpm dev      # start dev server
+pnpm build    # production build
+pnpm start    # serve production build
+pnpm lint     # run ESLint
+```
+
+## Deployment
+
+The site is designed to be deployed on [Vercel](https://vercel.com). Push to the connected GitHub repository and Vercel will build and deploy automatically. For static hosting, set `output: "export"` in `next.config.mjs` and serve the `out/` directory.
+
+## Maintainers
+
+[@teddymalhan](https://github.com/teddymalhan)
+
+## Acknowledgements
+
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Radix UI](https://www.radix-ui.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
 - [Framer Motion](https://www.framer.com/motion/)
 
----
+## Contributing
 
-⭐ Star this repo if you find it helpful!
+Feel free to open an [issue](https://github.com/teddymalhan/teddy-portfolio-rebuild/issues) or submit a PR. Small PRs are preferred; please run `pnpm lint` before submitting. Questions can be asked in the issues tracker.
+
+This project follows the [Contributor Covenant](https://www.contributor-covenant.org/) Code of Conduct.
+
+## License
+
+[GPL-3.0-or-later](LICENSE.md) © Teddy Malhan
