@@ -28,7 +28,7 @@ const experiences: ExperienceItem[] = [
     company: "Electronic Arts",
     role: "Software Engineer Intern",
     period: "May 2025 - Aug 2025",
-    location: "Vancouver, BC",
+    location: "Toronto, ON",
     logo: "/ea-logo-full.jpg",
     logoStyle: "padded",
     tags: ["🕹️ Digital Platform: Arrival"],
