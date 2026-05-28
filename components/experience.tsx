@@ -63,7 +63,7 @@ const experiences: ExperienceItem[] = [
   {
     company: "Simon Fraser University",
     role: "Computer Science",
-    period: "Expected May 2027",
+    period: "From January 2024",
     location: "Burnaby, BC",
     logo: "/sfu-logo.jpg",
     logoStyle: "circular",
