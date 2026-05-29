@@ -144,12 +144,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Ensure fixed navigation stays in place in Safari */
-  .fixed {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
-
   /* Use display font for headings */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display), -apple-system, BlinkMacSystemFont, sans-serif;
@@ -240,6 +234,37 @@ body::-webkit-scrollbar {
   .page-enter-right, .page-enter-left, .page-exit-left, .page-exit-right {
     animation: none !important;
   }
+}
+
+/* ── Command / Search dialog open-close animation ────────────────────────
+   Mirrors the transitions.dev dropdown: scale 0.97→1 open (250ms),
+   scale 1→0.99 close (150ms), cubic-bezier(0.22, 1, 0.36, 1).
+   Translate kept in keyframes so centering holds during animation.
+   Radix sets data-state="open"/"closed" and waits for animationend.        */
+:root {
+  --cmd-open-dur: 250ms;
+  --cmd-close-dur: 150ms;
+  --cmd-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes cmd-open {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes cmd-close {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.99); }
+}
+
+[data-slot="dialog-content"][data-state="open"] {
+  animation: cmd-open var(--cmd-open-dur) var(--cmd-ease) both;
+}
+[data-slot="dialog-content"][data-state="closed"] {
+  animation: cmd-close var(--cmd-close-dur) var(--cmd-ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="dialog-content"] { animation: none !important; }
 }
 
 /* Fill button effect - matches page theme */
