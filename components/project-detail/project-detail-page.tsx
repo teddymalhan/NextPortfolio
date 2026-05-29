@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, lazy } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import type { Project } from "@/lib/projects";
 import { ProjectHeader } from "./project-header";
@@ -9,6 +8,7 @@ import { ProjectHero } from "./project-hero";
 import { ProjectSidebar } from "./project-sidebar";
 import { ContentSection } from "./content-section";
 import { TableOfContents } from "./table-of-contents";
+import { usePageTransition } from "@/components/page-transition";
 
 // Lazy load heavier components
 const DemoSection = lazy(() =>
@@ -20,10 +20,10 @@ interface ProjectDetailPageProps {
 }
 
 export function ProjectDetailPage({ project }: ProjectDetailPageProps) {
-  const router = useRouter();
+  const { navigateTo } = usePageTransition();
 
   const handleBackClick = () => {
-    router.push("/");
+    navigateTo("/", "back");
   };
 
   return (

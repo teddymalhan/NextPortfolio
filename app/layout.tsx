@@ -6,6 +6,7 @@ import Script from "next/script"
 import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper"
 import { ThemeProvider } from "@/components/theme-provider"
 import { MotionProvider } from "@/components/motion-provider"
+import { PageTransitionProvider } from "@/components/page-transition"
 import "./globals.css"
 
 // Lazy load analytics to defer non-critical scripts
@@ -192,14 +193,14 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <MotionProvider>
-                <div>
+                <PageTransitionProvider>
                   <Suspense fallback={null}>
                     {children}
                   </Suspense>
-                  <Suspense fallback={null}>
-                    <DeferredAnalytics />
-                  </Suspense>
-                </div>
+                </PageTransitionProvider>
+                <Suspense fallback={null}>
+                  <DeferredAnalytics />
+                </Suspense>
               </MotionProvider>
             </ThemeProvider>
           </ClerkProviderWrapper>

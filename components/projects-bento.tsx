@@ -9,10 +9,12 @@ import { cn } from "@/lib/utils";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
 import { getBentoProjects } from "@/lib/projects";
+import { usePageTransition } from "@/components/page-transition";
 
 export function ProjectsBento() {
   const projects = getBentoProjects();
   const prefersReducedMotion = useReducedMotion();
+  const { navigateTo } = usePageTransition();
 
   return (
     <m.section
@@ -38,12 +40,12 @@ export function ProjectsBento() {
                 key={project.slug}
                 href={`/projects/${project.slug}`}
                 className="contents"
-                onClick={() => {
-                  // Store current scroll position before navigating
-                  // CLAUDE.md 7.5: wrap in try-catch for incognito/Safari
+                onClick={(e) => {
+                  e.preventDefault();
                   try {
-                    sessionStorage.setItem('homeScrollPosition', window.pageYOffset.toString());
-                  } catch { /* ignore - graceful degradation */ }
+                    sessionStorage.setItem("homeScrollPosition", window.pageYOffset.toString());
+                  } catch {}
+                  navigateTo(`/projects/${project.slug}`, "forward");
                 }}
               >
                 <BentoCard

@@ -206,6 +206,42 @@ body::-webkit-scrollbar {
     mix-blend-mode: normal;
 }
 
+/* ── Page transitions ──────────────────────────────────── */
+:root {
+  --page-slide-dur: 220ms;
+  --page-slide-distance: 12px;
+  --page-blur: 3px;
+  --page-slide-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes page-enter-right {
+  from { opacity: 0; transform: translateX(var(--page-slide-distance)); filter: blur(var(--page-blur)); }
+  to   { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+@keyframes page-enter-left {
+  from { opacity: 0; transform: translateX(calc(var(--page-slide-distance) * -1)); filter: blur(var(--page-blur)); }
+  to   { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+@keyframes page-exit-left {
+  from { opacity: 1; transform: translateX(0); filter: blur(0); }
+  to   { opacity: 0; transform: translateX(calc(var(--page-slide-distance) * -1)); filter: blur(var(--page-blur)); }
+}
+@keyframes page-exit-right {
+  from { opacity: 1; transform: translateX(0); filter: blur(0); }
+  to   { opacity: 0; transform: translateX(var(--page-slide-distance)); filter: blur(var(--page-blur)); }
+}
+
+.page-enter-right { animation: page-enter-right var(--page-slide-dur) var(--page-slide-ease) both; }
+.page-enter-left  { animation: page-enter-left  var(--page-slide-dur) var(--page-slide-ease) both; }
+.page-exit-left   { animation: page-exit-left   var(--page-slide-dur) var(--page-slide-ease) both; pointer-events: none; }
+.page-exit-right  { animation: page-exit-right  var(--page-slide-dur) var(--page-slide-ease) both; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-right, .page-enter-left, .page-exit-left, .page-exit-right {
+    animation: none !important;
+  }
+}
+
 /* Fill button effect - matches page theme */
 .fill {
   --color: #1F2328;
