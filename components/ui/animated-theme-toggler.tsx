@@ -48,11 +48,14 @@ export const AnimatedThemeToggler = ({ className }: Props) => {
       className={cn(className)}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
     >
-      {isDark ? (
-        <Sun className="h-4 w-4 text-foreground" />
-      ) : (
-        <Moon className="h-4 w-4 text-foreground" />
-      )}
+      <span className="t-icon-swap" data-state={isDark ? "a" : "b"}>
+        <span className="t-icon" data-icon="a">
+          <Sun className="h-4 w-4 text-foreground" />
+        </span>
+        <span className="t-icon" data-icon="b">
+          <Moon className="h-4 w-4 text-foreground" />
+        </span>
+      </span>
     </button>
   );
 };

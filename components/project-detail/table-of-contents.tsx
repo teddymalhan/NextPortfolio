@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import type { ContentSection } from "@/lib/projects";
+import { cn } from "@/lib/utils";
+import { useClosingTransition } from "@/components/ui/transition-primitives";
 
 interface TableOfContentsProps {
   sections: ContentSection[];
@@ -20,7 +22,7 @@ function createSlug(title: string): string {
 export function TableOfContents({ sections, variant }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
-
+  const isClosing = useClosingTransition(isOpen, "--dropdown-close-dur", 150);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -94,7 +96,7 @@ export function TableOfContents({ sections, variant }: TableOfContentsProps) {
 
   // Mobile View - Dropdown
   return (
-    <div className="lg:hidden mb-8">
+    <div className="relative lg:hidden mb-8">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between px-4 py-3 bg-muted/50 rounded-lg text-sm font-medium text-foreground hover:bg-muted transition-colors"
@@ -106,8 +108,15 @@ export function TableOfContents({ sections, variant }: TableOfContentsProps) {
           }`}
         />
       </button>
-      {isOpen && (
-        <nav className="mt-2 px-4 py-3 bg-muted/30 rounded-lg space-y-2">
+      {(isOpen || isClosing) && (
+        <nav
+          data-origin="top-center"
+          className={cn(
+            "t-dropdown absolute left-0 right-0 top-full z-20 mt-2 px-4 py-3 bg-muted/30 rounded-lg space-y-2",
+            isOpen && "is-open",
+            isClosing && "is-closing"
+          )}
+        >
           {sections.map((section) => {
             const sectionId = createSlug(section.title);
             const isActive = activeId === sectionId;

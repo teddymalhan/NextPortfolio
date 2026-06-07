@@ -1,7 +1,7 @@
 "use client";
 
 import { Trophy } from "lucide-react";
-import { m, useReducedMotion } from "framer-motion";
+import { useMountedReveal } from "@/components/ui/transition-primitives";
 import { Badge } from "@/components/ui/badge";
 import type { Project } from "@/lib/projects";
 
@@ -10,42 +10,31 @@ interface ProjectHeaderProps {
 }
 
 export function ProjectHeader({ project }: ProjectHeaderProps) {
-  const prefersReducedMotion = useReducedMotion();
+  const isShown = useMountedReveal();
 
   return (
-    <m.header
-      initial={prefersReducedMotion ? false : { opacity: 0, y: -20 }}
-      animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-      className="mb-12"
-    >
+    <header className={`mb-12 t-stagger ${isShown ? "is-shown" : ""}`}>
       <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-4 flex-wrap">
+        <div className="t-stagger-line t-stagger-line--1 flex items-center gap-4 flex-wrap">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
             {project.title}
           </h1>
           {project.award && (
-            <m.div
-              initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.95 }}
-              animate={prefersReducedMotion ? {} : { opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            >
-              <Badge className="bg-foreground text-background dark:bg-background dark:text-foreground font-medium px-3 py-1.5 rounded-full border-0 text-sm flex items-center gap-1.5">
-                <Trophy className="w-3.5 h-3.5" />
-                {project.award}
-              </Badge>
-            </m.div>
+            <Badge className="bg-foreground text-background dark:bg-background dark:text-foreground font-medium px-3 py-1.5 rounded-full border-0 text-sm flex items-center gap-1.5">
+              <Trophy className="w-3.5 h-3.5" />
+              {project.award}
+            </Badge>
           )}
         </div>
 
-        <p className="text-lg text-muted-foreground">{project.period}</p>
+        <p className="t-stagger-line t-stagger-line--2 text-lg text-muted-foreground">{project.period}</p>
 
         {project.tagline && (
-          <p className="text-xl text-muted-foreground max-w-2xl mt-2">
+          <p className="t-stagger-line t-stagger-line--3 text-xl text-muted-foreground max-w-2xl mt-2">
             {project.tagline}
           </p>
         )}
       </div>
-    </m.header>
+    </header>
   );
 }

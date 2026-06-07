@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, lazy, Suspense, useCallback } from "react"
 import { m, useReducedMotion } from "framer-motion";
 import { Search } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { Tooltip, useTabsPill } from "@/components/ui/transition-primitives";
 import { useNavigationStore } from "@/stores";
 import { cn } from "@/lib/utils";
 
@@ -70,6 +71,7 @@ function DesktopNavigation({ scrollToSection, triggerConfetti, prefersReducedMot
   const activeSection = useNavigationStore((state) => state.activeSection);
   const isVisible = useNavigationStore((state) => state.isVisible);
   const setCommandOpen = useNavigationStore((state) => state.setCommandOpen);
+  const tabsRef = useTabsPill(activeSection || navItems[0].href.slice(1));
 
   return (
     <m.nav
@@ -115,26 +117,29 @@ function DesktopNavigation({ scrollToSection, triggerConfetti, prefersReducedMot
               🧸
             </button>
 
-            <div className="flex space-x-1" aria-label="Sections">
-              {navItems.map((item) => (
-                <m.button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${
-                    activeSection === item.href.slice(1)
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                  }`}
-                  aria-current={
-                    activeSection === item.href.slice(1) ? "page" : undefined
-                  }
-                  aria-label={`Go to ${item.name}`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.name}
-                </m.button>
-              ))}
+            <div ref={tabsRef} className="t-tabs" aria-label="Sections" role="tablist">
+              <span className="t-tabs-pill" aria-hidden="true" />
+              {navItems.map((item) => {
+                const sectionId = item.href.slice(1);
+                const isActive = activeSection === sectionId;
+
+                return (
+                  <m.button
+                    key={item.name}
+                    data-tab-value={sectionId}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => scrollToSection(item.href)}
+                    className="t-tab text-sm font-medium"
+                    aria-current={isActive ? "page" : undefined}
+                    aria-label={`Go to ${item.name}`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.name}
+                  </m.button>
+                );
+              })}
             </div>
           </div>
 
@@ -149,10 +154,12 @@ function DesktopNavigation({ scrollToSection, triggerConfetti, prefersReducedMot
             >
               <Search className="w-4 h-4 shrink-0" />
               <span className="flex-1 text-left">Search website...</span>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground/60">
-                <span className="text-xs">⌘</span>
-                <span className="text-xs">K</span>
-              </div>
+              <Tooltip label="Open command palette">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground/60">
+                  <span className="text-xs">⌘</span>
+                  <span className="text-xs">K</span>
+                </span>
+              </Tooltip>
             </button>
 
             <AnimatedThemeToggler className="w-9 h-9 rounded-full border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center transition-colors duration-200" />

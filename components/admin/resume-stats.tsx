@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { m, useReducedMotion } from "framer-motion";
 import { HardDrive, Clock, CheckCircle2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { AnimatedNumber } from "@/components/ui/transition-primitives";
 import { useResumeManagerStore } from "@/stores";
 
 const CONTAINER_VARIANTS = {
@@ -86,7 +87,9 @@ export function ResumeStats() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Storage</p>
-                <p className="text-3xl font-bold mt-2">{formatFileSize(totalStorage)}</p>
+                <p className="text-3xl font-bold mt-2">
+                  <AnimatedNumber value={formatFileSize(totalStorage)} />
+                </p>
               </div>
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-500/5 flex items-center justify-center">
                 <HardDrive className="h-6 w-6 text-purple-500" />

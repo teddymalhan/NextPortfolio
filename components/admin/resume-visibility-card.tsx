@@ -4,6 +4,7 @@ import { m, useReducedMotion } from "framer-motion";
 import { Loader2, EyeOff, Eye as EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { AnimatedText } from "@/components/ui/transition-primitives";
 import { useResumeManagerStore } from "@/stores";
 
 const REDUCED_MOTION_VARIANTS = {} as const;
@@ -43,15 +44,17 @@ export function ResumeVisibilityCard() {
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   {isResumeVisible ? "Hiding..." : "Showing..."}
                 </>
-              ) : isResumeVisible ? (
-                <>
-                  <EyeOff className="w-4 h-4 mr-2" />
-                  Hide Resume
-                </>
               ) : (
                 <>
-                  <EyeIcon className="w-4 h-4 mr-2" />
-                  Show Resume
+                  <span className="t-icon-swap mr-2" data-state={isResumeVisible ? "a" : "b"}>
+                    <span className="t-icon" data-icon="a">
+                      <EyeOff className="w-4 h-4" />
+                    </span>
+                    <span className="t-icon" data-icon="b">
+                      <EyeIcon className="w-4 h-4" />
+                    </span>
+                  </span>
+                  <AnimatedText value={isResumeVisible ? "Hide Resume" : "Show Resume"} />
                 </>
               )}
             </Button>

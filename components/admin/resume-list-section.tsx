@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { m, useReducedMotion } from "framer-motion";
 import {
   Trash2,
@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { ClearableInput, SuccessCheck, Tooltip } from "@/components/ui/transition-primitives";
 import { useResumeManagerStore } from "@/stores";
 
 const REDUCED_MOTION_VARIANTS = {} as const;
@@ -54,6 +55,13 @@ export function ResumeListSection() {
     toggleSelectAll,
   } = useResumeManagerStore();
   const prefersReducedMotion = useReducedMotion();
+  const [copiedResumeId, setCopiedResumeId] = useState<number | null>(null);
+
+  const handleCopyResumeLink = async (resume: (typeof resumes)[number]) => {
+    await copyResumeLink(resume);
+    setCopiedResumeId(resume.id);
+    window.setTimeout(() => setCopiedResumeId((current) => (current === resume.id ? null : current)), 1800);
+  };
 
   const filteredAndSortedResumes = useMemo(() => {
     let filtered = resumes;
@@ -103,23 +111,30 @@ export function ResumeListSection() {
             <div className="flex items-center gap-4">
               <CardTitle className="text-xl">Resume Versions</CardTitle>
               {selectedResumes.size > 0 && (
-                <Button variant="destructive" size="sm" onClick={bulkDelete} className="gap-2">
+                <Button variant="destructive" size="sm" onClick={bulkDelete} className="relative gap-2">
                   <Trash2 className="w-4 h-4" />
-                  Delete Selected ({selectedResumes.size})
+                  Delete Selected
+                  <span className="t-badge" data-open="true" aria-hidden="true">
+                    <span className="t-badge-dot min-w-5 rounded-full bg-background px-1.5 py-0.5 text-center text-[10px] font-bold text-destructive shadow">
+                      {selectedResumes.size}
+                    </span>
+                  </span>
                 </Button>
               )}
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1 sm:min-w-[200px]">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search by filename or notes..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-sm border border-input rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                />
-              </div>
+              <ClearableInput
+                type="text"
+                placeholder="Search by filename or notes..."
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+                wrapperClassName="relative flex-1 sm:min-w-[200px]"
+                leadingIcon={
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                }
+                className="w-full pl-9 pr-10 py-2 text-sm border border-input rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                textClassName="pl-9 pr-10 py-2 text-sm"
+              />
               <div className="relative">
                 <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <select
@@ -208,13 +223,15 @@ export function ResumeListSection() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="font-medium truncate">{resume.filename}</p>
-                        <button
-                          onClick={() => openRename(resume)}
-                          className="shrink-0 p-1 hover:bg-accent rounded-lg transition-colors"
-                          title="Rename resume"
-                        >
-                          <Pencil className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
-                        </button>
+                        <Tooltip label="Rename resume">
+                          <button
+                            onClick={() => openRename(resume)}
+                            className="shrink-0 p-1 hover:bg-accent rounded-lg transition-colors"
+                            aria-label="Rename resume"
+                          >
+                            <Pencil className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                          </button>
+                        </Tooltip>
                       </div>
                       <div className="flex items-center gap-3 text-sm text-muted-foreground">
                         <span>
@@ -244,54 +261,68 @@ export function ResumeListSection() {
                   <div className="flex items-center gap-2 shrink-0 ml-4">
                     {resume.isActive && (
                       <>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyResumeLink(resume)}
-                          title="Copy resume link"
-                          className="hover:bg-accent"
-                        >
-                          <Link2 className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => window.open("/", "_blank")}
-                          title="View on website"
-                          className="hover:bg-accent"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </Button>
+                        <Tooltip label="Copy resume link">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleCopyResumeLink(resume)}
+                            aria-label="Copy resume link"
+                            className="hover:bg-accent"
+                          >
+                            {copiedResumeId === resume.id ? (
+                              <SuccessCheck active className="text-green-500" />
+                            ) : (
+                              <Link2 className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </Tooltip>
+                        <Tooltip label="View on website">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => window.open("/", "_blank")}
+                            aria-label="View on website"
+                            className="hover:bg-accent"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </Button>
+                        </Tooltip>
                       </>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => openEditNotes(resume)}
-                      title="Edit notes"
-                      className="hover:bg-accent"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setPreviewResume(resume)}
-                      title="Preview resume"
-                      className="hover:bg-accent"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    <a href={resume.path} target="_blank" rel="noopener noreferrer">
+                    <Tooltip label="Edit notes">
                       <Button
                         variant="ghost"
                         size="sm"
-                        title="Download resume"
+                        onClick={() => openEditNotes(resume)}
+                        aria-label="Edit notes"
                         className="hover:bg-accent"
                       >
-                        <Download className="w-4 h-4" />
+                        <Edit2 className="w-4 h-4" />
                       </Button>
-                    </a>
+                    </Tooltip>
+                    <Tooltip label="Preview resume">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setPreviewResume(resume)}
+                        aria-label="Preview resume"
+                        className="hover:bg-accent"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip label="Download resume">
+                      <a href={resume.path} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          aria-label="Download resume"
+                          className="hover:bg-accent"
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      </a>
+                    </Tooltip>
                     {!resume.isActive && (
                       <Button
                         variant="outline"
@@ -304,13 +335,16 @@ export function ResumeListSection() {
                       </Button>
                     )}
                     {!resume.isActive && (
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => deleteResume(resume.id, resume.filename)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <Tooltip label="Delete resume">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteResume(resume.id, resume.filename)}
+                          aria-label="Delete resume"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </Tooltip>
                     )}
                   </div>
                 </m.div>

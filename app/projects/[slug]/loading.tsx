@@ -1,7 +1,8 @@
 export default function Loading() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-24 animate-pulse">
+      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-24 t-skel">
+        <div className="t-skel-skeleton is-pulsing" style={{ position: "relative" }}>
         {/* Back link */}
         <div className="h-5 w-32 bg-muted rounded mb-8" />
 
@@ -64,6 +65,7 @@ export default function Loading() {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

@@ -10,6 +10,30 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
 import { getBentoProjects } from "@/lib/projects";
 import { usePageTransition } from "@/components/page-transition";
+import { useAvatarGroup } from "@/components/ui/transition-primitives";
+
+function ProjectTags({ tags }: { tags: string[] }) {
+  const avatarGroup = useAvatarGroup();
+
+  return (
+    <div
+      ref={avatarGroup.groupRef}
+      onMouseLeave={avatarGroup.onGroupMouseLeave}
+      className="t-avatar-group mt-auto flex flex-wrap gap-2"
+    >
+      {tags.map((t, index) => (
+        <span key={t} className="t-avatar" {...avatarGroup.getAvatarProps(index)}>
+          <Badge
+            variant="secondary"
+            className="rounded-full px-3 py-1 text-xs font-normal bg-muted text-muted-foreground border-0"
+          >
+            {t}
+          </Badge>
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export function ProjectsBento() {
   const projects = getBentoProjects();
@@ -51,7 +75,7 @@ export function ProjectsBento() {
                 <BentoCard
                   name={project.name}
                   className={cn(
-                    "bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer",
+                    "t-resize bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer",
                     project.gridClassName
                   )}
                   background={
@@ -84,17 +108,7 @@ export function ProjectsBento() {
                       {project.description}
                     </p>
 
-                    <div className="mt-auto flex flex-wrap gap-2">
-                      {tags.map((t) => (
-                        <Badge
-                          key={t}
-                          variant="secondary"
-                          className="rounded-full px-3 py-1 text-xs font-normal bg-muted text-muted-foreground border-0"
-                        >
-                          {t}
-                        </Badge>
-                      ))}
-                    </div>
+                    <ProjectTags tags={tags} />
                   </div>
                 </BentoCard>
               </Link>

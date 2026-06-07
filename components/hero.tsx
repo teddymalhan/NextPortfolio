@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
+import { useMountedReveal } from "@/components/ui/transition-primitives";
 import { InstantHighlighter } from "@/components/fancy/text/instant-highlighter";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { ChevronDown } from "lucide-react";
 
 export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
+  const isShown = useMountedReveal();
   const scrollToExperience = () => {
     const experienceSection = document.getElementById("experience");
     if (experienceSection) {
@@ -19,9 +23,9 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
       className="relative min-h-screen h-dvh w-full overflow-hidden flex items-center justify-center"
     >
       <div className="relative z-10 container mx-auto px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-5xl text-center">
+        <div className={`mx-auto max-w-5xl text-center t-stagger ${isShown ? "is-shown" : ""}`}>
           {/* Heading */}
-          <h1 className="text-6xl tracking-tighter text-balance sm:text-6xl md:text-7xl lg:text-7xl font-bold mb-6 text-foreground drop-shadow-lg">
+          <h1 className="t-stagger-line t-stagger-line--1 text-6xl tracking-tighter text-balance sm:text-6xl md:text-7xl lg:text-7xl font-bold mb-6 text-foreground drop-shadow-lg">
             <span className="relative inline-flex flex-wrap items-center justify-center gap-2">
               <span className="text-foreground drop-shadow-md">
                 hi!
@@ -37,7 +41,7 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
             </span>
           </h1>
 
-          <p className="text-foreground/90 text-2xl md:text-3xl mb-4 font-semibold drop-shadow-md">
+          <p className="t-stagger-line t-stagger-line--2 text-foreground/90 text-2xl md:text-3xl mb-4 font-semibold drop-shadow-md">
             I build <InstantHighlighter
                 highlightColor="rgb(0, 165, 41)"
                 className="text-white px-2 py-1 rounded font-bold"
@@ -50,7 +54,7 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
               </InstantHighlighter>
           </p>
 
-          <p className="text-foreground/90 text-2xl md:text-3xl mb-8 font-semibold drop-shadow-md">
+          <p className="t-stagger-line t-stagger-line--3 text-foreground/90 text-2xl md:text-3xl mb-8 font-semibold drop-shadow-md">
             prev. swe intern at{" "}
             <span className="inline-flex items-center gap-1">
               <Image
