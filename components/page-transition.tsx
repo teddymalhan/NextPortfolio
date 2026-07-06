@@ -11,6 +11,7 @@ import {
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Loader } from "@/components/motion/loader";
+import { usePortfolioSounds } from "@/components/sound-effects";
 
 type Direction = "forward" | "back";
 
@@ -43,6 +44,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const pushTimeoutRef = useRef<number | null>(null);
   const loaderTimeoutRef = useRef<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const { playPageEnter, playPageExit } = usePortfolioSounds();
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -73,12 +75,13 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     );
     void el.offsetHeight;
     el.classList.add(enterCls);
+    playPageEnter();
 
     loaderTimeoutRef.current = window.setTimeout(() => {
       setIsTransitioning(false);
       loaderTimeoutRef.current = null;
     }, DURATION);
-  }, [pathname]);
+  }, [pathname, playPageEnter]);
 
   useEffect(() => {
     return () => {
@@ -97,6 +100,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       if (targetPath === pathname) {
         return;
       }
+      playPageExit();
 
       const fromProject =
         pathname === "/projects" || pathname.startsWith("/projects/");
@@ -132,7 +136,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
         router.push(href);
       }, DURATION);
     },
-    [pathname, router]
+    [pathname, router, playPageExit]
   );
 
   return (

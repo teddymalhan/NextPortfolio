@@ -7,6 +7,7 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Tooltip, useTabsPill } from "@/components/ui/transition-primitives";
 import { useNavigationStore } from "@/stores";
 import { cn } from "@/lib/utils";
+import { usePortfolioSounds } from "@/components/sound-effects";
 
 // Lazy load heavy components since they're not critical for initial render
 const Fireworks = lazy(() => import("react-canvas-confetti/dist/presets/fireworks"));
@@ -34,10 +35,12 @@ function MobileNavAccordionItem({
   item,
   scrollToSection,
   prefersReducedMotion,
+  playTabSwitch,
 }: {
   item: { name: string; href: string; emoji: string };
   scrollToSection: (href: string) => void;
   prefersReducedMotion: boolean;
+  playTabSwitch: () => void;
 }) {
   return (
     <m.div
@@ -47,6 +50,7 @@ function MobileNavAccordionItem({
     >
       <button
         onClick={() => {
+          playTabSwitch();
           scrollToSection(item.href);
         }}
         className="w-full py-3 px-4 flex items-center group hover:bg-primary/10 hover:text-primary rounded-full transition-colors duration-200"
@@ -65,9 +69,22 @@ interface NavProps {
   triggerConfetti: () => void;
   prefersReducedMotion: boolean;
   isResumeVisible: boolean;
+  playCommand: () => void;
+  playEscape: () => void;
+  playDrawerOpen: () => void;
+  playDrawerClose: () => void;
+  playTabSwitch: () => void;
+  playConfetti: () => void;
 }
 
-function DesktopNavigation({ scrollToSection, triggerConfetti, prefersReducedMotion }: NavProps) {
+function DesktopNavigation({
+  scrollToSection,
+  triggerConfetti,
+  prefersReducedMotion,
+  playCommand,
+  playTabSwitch,
+  playConfetti,
+}: NavProps) {
   const activeSection = useNavigationStore((state) => state.activeSection);
   const isVisible = useNavigationStore((state) => state.isVisible);
   const setCommandOpen = useNavigationStore((state) => state.setCommandOpen);
@@ -110,7 +127,10 @@ function DesktopNavigation({ scrollToSection, triggerConfetti, prefersReducedMot
           {/* Left side - Logo and Navigation */}
           <div className="flex items-center gap-6">
             <button
-              onClick={triggerConfetti}
+              onClick={() => {
+                playConfetti();
+                triggerConfetti();
+              }}
               className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
               aria-label="Trigger confetti"
             >
@@ -129,7 +149,10 @@ function DesktopNavigation({ scrollToSection, triggerConfetti, prefersReducedMot
                     data-tab-value={sectionId}
                     role="tab"
                     aria-selected={isActive}
-                    onClick={() => scrollToSection(item.href)}
+                    onClick={() => {
+                      playTabSwitch();
+                      scrollToSection(item.href);
+                    }}
                     className="t-tab text-sm font-medium"
                     aria-current={isActive ? "page" : undefined}
                     aria-label={`Go to ${item.name}`}
@@ -146,7 +169,10 @@ function DesktopNavigation({ scrollToSection, triggerConfetti, prefersReducedMot
           {/* Right side - Search Bar, Auth, and Theme Toggle */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setCommandOpen(true)}
+              onClick={() => {
+                playCommand();
+                setCommandOpen(true);
+              }}
               className="flex items-center gap-3 px-4 py-2 text-sm font-medium bg-background border border-border rounded-full hover:bg-accent hover:text-accent-foreground text-muted-foreground transition-colors duration-200"
               style={{
                 minWidth: "240px",
@@ -174,11 +200,11 @@ function MobileNav({
   scrollToSection,
   triggerConfetti,
   prefersReducedMotion,
-}: {
-  scrollToSection: (href: string) => void;
-  triggerConfetti: () => void;
-  prefersReducedMotion: boolean;
-}) {
+  playDrawerOpen,
+  playDrawerClose,
+  playTabSwitch,
+  playConfetti,
+}: NavProps) {
   const isVisible = useNavigationStore((state) => state.isVisible);
   const isMobileMenuOpen = useNavigationStore((state) => state.isMobileMenuOpen);
   const setIsMobileMenuOpen = useNavigationStore((state) => state.setIsMobileMenuOpen);
@@ -190,7 +216,12 @@ function MobileNav({
           "lg:hidden fixed inset-0 z-40 backdrop-blur-sm bg-background/30 transition-opacity duration-300",
           isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
-        onClick={() => setIsMobileMenuOpen(false)}
+        onClick={() => {
+          if (isMobileMenuOpen) {
+            playDrawerClose();
+            setIsMobileMenuOpen(false);
+          }
+        }}
         aria-hidden="true"
       />
       <div
@@ -216,6 +247,7 @@ function MobileNav({
         <div className="h-[60px] flex items-center justify-between px-4 shrink-0">
           <button
             onClick={() => {
+              playConfetti();
               triggerConfetti();
             }}
             className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
@@ -228,6 +260,11 @@ function MobileNav({
             <AnimatedThemeToggler className="w-9 h-9 rounded-full border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center transition-colors duration-200" />
             <button
               onClick={() => {
+                if (isMobileMenuOpen) {
+                  playDrawerClose();
+                } else {
+                  playDrawerOpen();
+                }
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
               className="h-10 w-10 flex flex-col items-center justify-center gap-[6px] rounded-full hover:bg-secondary/50 transition-colors duration-200 cursor-pointer"
@@ -263,6 +300,7 @@ function MobileNav({
               item={item}
               scrollToSection={scrollToSection}
               prefersReducedMotion={prefersReducedMotion}
+              playTabSwitch={playTabSwitch}
             />
           ))}
         </m.nav>
@@ -289,6 +327,14 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
   const conductorRef = useRef<any>(null);
   const prefersReducedMotion = useReducedMotion();
   const [isMounted, setIsMounted] = useState(false);
+  const {
+    playCommand,
+    playEscape,
+    playDrawerOpen,
+    playDrawerClose,
+    playTabSwitch,
+    playConfetti,
+  } = usePortfolioSounds();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -323,14 +369,24 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
+        const isCommandOpen = useNavigationStore.getState().commandOpen;
+        if (isCommandOpen) {
+          playEscape();
+        } else {
+          playCommand();
+        }
         toggleCommand();
       } else if (e.key === "Escape") {
+        const { commandOpen, isMobileMenuOpen } = useNavigationStore.getState();
+        if (commandOpen || isMobileMenuOpen) {
+          playEscape();
+        }
         handleEscape();
       }
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, [toggleCommand, handleEscape]);
+  }, [toggleCommand, handleEscape, playCommand, playEscape]);
 
   const scrollToSection = useCallback((href: string) => {
     const sectionId = href.slice(1);
@@ -380,16 +436,18 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
     triggerConfetti,
     prefersReducedMotion: !!prefersReducedMotion,
     isResumeVisible,
+    playCommand,
+    playEscape,
+    playDrawerOpen,
+    playDrawerClose,
+    playTabSwitch,
+    playConfetti,
   };
 
   return (
     <>
       <DesktopNavigation {...navProps} />
-      <MobileNav
-        scrollToSection={scrollToSection}
-        triggerConfetti={triggerConfetti}
-        prefersReducedMotion={!!prefersReducedMotion}
-      />
+      <MobileNav {...navProps} />
 
       {/* Command Dialog - Lazy loaded */}
       {commandOpen && (

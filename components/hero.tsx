@@ -5,9 +5,11 @@ import { useMountedReveal } from "@/components/ui/transition-primitives";
 import { InstantHighlighter } from "@/components/fancy/text/instant-highlighter";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { ChevronDown } from "lucide-react";
+import { usePortfolioSounds } from "@/components/sound-effects";
 
 export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
   const isShown = useMountedReveal();
+  const { playClick, playSlideDown } = usePortfolioSounds();
   const scrollToExperience = () => {
     const experienceSection = document.getElementById("experience");
     if (experienceSection) {
@@ -101,6 +103,7 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
               <InteractiveHoverButton
                 onClick={() => {
                   // Use navigation store's resume path or fallback
+                  playClick();
                   const timestamp = Date.now();
                   window.open(`/Teddy_Malhan_Resume.pdf?t=${timestamp}`, "_blank", "noopener,noreferrer");
                 }}
@@ -115,7 +118,10 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
 
       {/* Scroll indicator */}
       <button
-        onClick={scrollToExperience}
+        onClick={() => {
+          playSlideDown();
+          scrollToExperience();
+        }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 group cursor-pointer"
         aria-label="Scroll to experience"
       >

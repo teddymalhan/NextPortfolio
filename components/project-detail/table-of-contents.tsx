@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import type { ContentSection } from "@/lib/projects";
 import { cn } from "@/lib/utils";
 import { useClosingTransition } from "@/components/ui/transition-primitives";
+import { usePortfolioSounds } from "@/components/sound-effects";
 
 interface TableOfContentsProps {
   sections: ContentSection[];
@@ -23,6 +24,7 @@ export function TableOfContents({ sections, variant }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
   const isClosing = useClosingTransition(isOpen, "--dropdown-close-dur", 150);
+  const { playDropdownOpen, playDropdownClose, playTabSwitch } = usePortfolioSounds();
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -53,6 +55,7 @@ export function TableOfContents({ sections, variant }: TableOfContentsProps) {
   }, [sections]);
 
   const handleClick = (sectionId: string) => {
+    playTabSwitch();
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -98,7 +101,14 @@ export function TableOfContents({ sections, variant }: TableOfContentsProps) {
   return (
     <div className="relative lg:hidden mb-8">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) {
+            playDropdownClose();
+          } else {
+            playDropdownOpen();
+          }
+          setIsOpen(!isOpen);
+        }}
         className="w-full flex items-center justify-between px-4 py-3 bg-muted/50 rounded-lg text-sm font-medium text-foreground hover:bg-muted transition-colors"
       >
         <span>On this page</span>

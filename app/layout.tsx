@@ -7,6 +7,7 @@ import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper"
 import { ThemeProvider } from "@/components/theme-provider"
 import { MotionProvider } from "@/components/motion-provider"
 import { PageTransitionProvider } from "@/components/page-transition"
+import { PortfolioSoundProvider } from "@/components/sound-effects"
 import { ScrollBounceGuard } from "@/components/scroll-bounce-guard"
 import "./globals.css"
 
@@ -195,11 +196,13 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <MotionProvider>
-                <PageTransitionProvider>
-                  <Suspense fallback={null}>
-                    {children}
-                  </Suspense>
-                </PageTransitionProvider>
+                <PortfolioSoundProvider>
+                  <PageTransitionProvider>
+                    <Suspense fallback={null}>
+                      {children}
+                    </Suspense>
+                  </PageTransitionProvider>
+                </PortfolioSoundProvider>
                 <Suspense fallback={null}>
                   <DeferredAnalytics />
                 </Suspense>

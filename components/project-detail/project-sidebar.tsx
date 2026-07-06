@@ -3,6 +3,7 @@
 import { m, useReducedMotion } from "framer-motion";
 import { ExternalLink, Github, Youtube, FileText, Play } from "lucide-react";
 import type { Project, ProjectLink } from "@/lib/projects";
+import { usePortfolioSounds } from "@/components/sound-effects";
 
 const iconMap = {
   ExternalLink,
@@ -18,11 +19,13 @@ interface ProjectSidebarProps {
 
 function LinkItem({ link }: { link: ProjectLink }) {
   const Icon = iconMap[link.icon];
+  const { playClick } = usePortfolioSounds();
   return (
     <a
       href={link.href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={playClick}
       className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors group"
     >
       <span>{link.label}</span>

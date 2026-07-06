@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/command";
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { usePortfolioSounds } from "@/components/sound-effects";
 
 interface CommandPaletteProps {
   open: boolean;
@@ -44,10 +45,19 @@ function CommandPalette({
   const { isSignedIn } = useAuth();
   const { signOut } = useClerk();
   const router = useRouter();
+  const { playSelect, playEscape, playConfetti } = usePortfolioSounds();
 
-  const runCommand = (command: () => void) => {
+  const runCommand = (command: () => void, playBeforeClose: () => void = playSelect) => {
+    playBeforeClose();
     onOpenChange(false);
     command();
+  };
+
+  const handleDialogOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      playEscape();
+    }
+    onOpenChange(nextOpen);
   };
 
   const handleAdminClick = () => {
@@ -61,7 +71,7 @@ function CommandPalette({
   return (
     <CommandDialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleDialogOpenChange}
       title="Search Portfolio"
       description="Quickly navigate to any section or find what you're looking for"
     >
@@ -170,7 +180,7 @@ function CommandPalette({
         <CommandSeparator />
 
         <CommandGroup heading="Fun">
-          <CommandItem onSelect={() => runCommand(() => triggerConfetti())}>
+          <CommandItem onSelect={() => runCommand(() => triggerConfetti(), playConfetti)}>
             <span className="mr-2">🎉</span>
             <span>Trigger Confetti</span>
           </CommandItem>

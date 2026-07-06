@@ -6,6 +6,7 @@ import { flushSync } from "react-dom";
 import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
+import { usePortfolioSounds } from "@/components/sound-effects";
 
 type Props = {
   className?: string;
@@ -15,9 +16,15 @@ export const AnimatedThemeToggler = ({ className }: Props) => {
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { playToggleOn, playToggleOff } = usePortfolioSounds();
 
   const toggleTheme = useCallback(async () => {
     if (!buttonRef.current) return;
+    if (isDark) {
+      playToggleOff();
+    } else {
+      playToggleOn();
+    }
 
     // Type assertion for View Transition API
     const doc = document as Document & {
@@ -39,7 +46,7 @@ export const AnimatedThemeToggler = ({ className }: Props) => {
     }
 
     
-  }, [theme, setTheme]);
+  }, [theme, setTheme, isDark, playToggleOn, playToggleOff]);
 
   return (
     <button
