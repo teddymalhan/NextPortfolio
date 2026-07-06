@@ -7,6 +7,7 @@ import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper"
 import { ThemeProvider } from "@/components/theme-provider"
 import { MotionProvider } from "@/components/motion-provider"
 import { PageTransitionProvider } from "@/components/page-transition"
+import { ScrollBounceGuard } from "@/components/scroll-bounce-guard"
 import "./globals.css"
 
 // Lazy load analytics to defer non-critical scripts
@@ -177,6 +178,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${plusJakarta.variable} ${manrope.variable} font-sans`}>
+        <ScrollBounceGuard />
         <Script
           id="structured-data"
           type="application/ld+json"
