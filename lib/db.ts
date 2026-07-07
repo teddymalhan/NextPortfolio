@@ -18,7 +18,7 @@ function getSql() {
 
 // Create a callable function that works as a template tag
 // This proxies template tag calls to the lazily-initialized neon instance
-const sqlTemplateTag = ((strings: TemplateStringsArray, ...values: any[]) => {
+const sqlTemplateTag = ((strings: TemplateStringsArray, ...values: unknown[]) => {
   const instance = getSql()
   return instance(strings, ...values)
 }) as NeonQueryFunction<boolean, boolean>

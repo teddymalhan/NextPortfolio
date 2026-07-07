@@ -7,7 +7,7 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 import { ChevronDown } from "lucide-react";
 import { usePortfolioSounds } from "@/components/sound-effects";
 
-export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
+export function Hero({ isResumeVisible, resumePath }: { isResumeVisible: boolean; resumePath: string | null }) {
   const isShown = useMountedReveal();
   const { playClick, playSlideDown } = usePortfolioSounds();
   const scrollToExperience = () => {
@@ -97,13 +97,11 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            {isResumeVisible && (
+            {isResumeVisible && resumePath && (
               <InteractiveHoverButton
                 onClick={() => {
-                  // Use navigation store's resume path or fallback
                   playClick();
-                  const timestamp = Date.now();
-                  window.open(`/Teddy_Malhan_Resume.pdf?t=${timestamp}`, "_blank", "noopener,noreferrer");
+                  window.open(resumePath, "_blank", "noopener,noreferrer");
                 }}
                 className="bg-teal-700 hover:bg-amber-600 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 [&>div>div]:bg-white [&>div>div]:opacity-90 [&>div:last-child]:bg-amber-600 [&>div:last-child]:text-white"
               >

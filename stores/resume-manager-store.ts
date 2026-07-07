@@ -19,6 +19,10 @@ type SortBy =
   | 'size-desc'
   | 'size-asc'
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  return error instanceof Error && error.message ? error.message : fallback
+}
+
 interface ResumeManagerState {
   // Resume data
   resumes: ResumeVersion[]
@@ -115,9 +119,9 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
         const data = await handleApiResponse<ResumeResponse[]>(res)
         console.log('Fetched resumes:', data)
         set({ resumes: data })
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Failed to fetch resumes:', error)
-        toast.error(error.message || 'Failed to load resumes')
+        toast.error(getErrorMessage(error, 'Failed to load resumes'))
       } finally {
         set({ loading: false })
       }
@@ -171,8 +175,8 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
         if (autoSetActive && data.id) {
           await get().setActive(data.id)
         }
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to upload resume')
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error, 'Failed to upload resume'))
       } finally {
         set({ uploading: false })
       }
@@ -189,8 +193,8 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
         await handleApiResponse(res)
         toast.success('Active resume updated')
         await get().fetchResumes()
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to update active resume')
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error, 'Failed to update active resume'))
       }
     },
 
@@ -210,8 +214,8 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
         await handleApiResponse(res)
         toast.success('Resume deleted')
         await get().fetchResumes()
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to delete resume')
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error, 'Failed to delete resume'))
       }
     },
 
@@ -235,8 +239,8 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
             ? 'Resume is now visible on the website'
             : 'Resume is now hidden from the website',
         )
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to toggle visibility')
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error, 'Failed to toggle visibility'))
       } finally {
         set({ togglingVisibility: false })
         setTimeout(() => set({ cooldown: false }), 2000)
@@ -267,8 +271,8 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
         toast.success('Notes updated')
         set({ editingNotes: null, notesText: '' })
         await get().fetchResumes()
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to update notes')
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error, 'Failed to update notes'))
       }
     },
 
@@ -309,8 +313,8 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
         toast.success('Resume renamed')
         set({ renamingResume: null, newFilename: '' })
         await get().fetchResumes()
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to rename resume')
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error, 'Failed to rename resume'))
       }
     },
 
@@ -383,8 +387,8 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
 
         set({ selectedResumes: new Set<number>() })
         await get().fetchResumes()
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to delete resumes')
+      } catch (error: unknown) {
+        toast.error(getErrorMessage(error, 'Failed to delete resumes'))
       }
     },
 
@@ -398,7 +402,7 @@ export const useResumeManagerStore = createStore<ResumeManagerState>(
 
     // Utility
     copyResumeLink: async (resume: ResumeVersion) => {
-      const resumeUrl = `${window.location.origin}/Teddy_Malhan_Resume.pdf`
+      const resumeUrl = `${window.location.origin}/api/resume/file?v=${resume.id}`
       try {
         await navigator.clipboard.writeText(resumeUrl)
         toast.success('Resume link copied to clipboard!')

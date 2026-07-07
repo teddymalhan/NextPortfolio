@@ -8,10 +8,12 @@ import { Tooltip, useTabsPill } from "@/components/ui/transition-primitives";
 import { useNavigationStore } from "@/stores";
 import { cn } from "@/lib/utils";
 import { usePortfolioSounds } from "@/components/sound-effects";
+import type { TConductorInstance } from "react-canvas-confetti/dist/types";
 
 // Lazy load heavy components since they're not critical for initial render
 const Fireworks = lazy(() => import("react-canvas-confetti/dist/presets/fireworks"));
 const CommandPalette = lazy(() => import("@/components/command-palette"));
+
 
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
@@ -213,7 +215,7 @@ function MobileNav({
     <>
       <div
         className={cn(
-          "lg:hidden fixed inset-0 z-40 backdrop-blur-sm bg-background/30 transition-opacity duration-300",
+          "lg:hidden fixed inset-0 z-40 bg-background/40 transition-opacity duration-200",
           isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
         onClick={() => {
@@ -226,23 +228,20 @@ function MobileNav({
       />
       <div
         className={cn(
-          "lg:hidden fixed top-4 left-4 right-4 z-50 transition-[opacity,transform] duration-300 ease-in-out",
+          "lg:hidden fixed top-4 left-4 right-4 z-50 transition-[opacity,transform] duration-200 ease-out",
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
         )}
       >
       <m.div
         initial={false}
-        animate={{ height: isMobileMenuOpen ? "auto" : 60 }}
-        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+        animate={{ height: isMobileMenuOpen ? 284 : 60 }}
+        transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
         className={cn(
           "overflow-hidden rounded-2xl",
-          "bg-card/98 supports-[backdrop-filter]:bg-card/90 supports-[backdrop-filter]:backdrop-blur-md",
-          "dark:bg-card supports-[backdrop-filter]:dark:bg-card/95",
-          "border border-border dark:border-border/90 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10",
+          "bg-card/95 dark:bg-card/95",
+          "border border-border dark:border-border/90 shadow-lg dark:shadow-xl dark:shadow-black/25 shadow-blue-500/10",
           "transform-gpu backface-hidden",
         )}
-        onAnimationStart={() => console.log("[MobileNav] animation start", { isMobileMenuOpen })}
-        onAnimationComplete={() => console.log("[MobileNav] animation complete", { isMobileMenuOpen })}
       >
         <div className="h-[60px] flex items-center justify-between px-4 shrink-0">
           <button
@@ -310,23 +309,28 @@ function MobileNav({
   );
 }
 
-export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
+export function Navigation({
+  isResumeVisible,
+  resumePath,
+}: {
+  isResumeVisible: boolean;
+  resumePath: string | null;
+}) {
   const {
     handleScroll: handleScrollAction,
     setIsMobileMenuOpen,
     updateCanvasDimensions,
-    fetchResumePath,
     toggleCommand,
     handleEscape,
   } = useNavigationStore();
 
   const commandOpen = useNavigationStore((state) => state.commandOpen);
-  const resumePath = useNavigationStore((state) => state.resumePath);
   const canvasDimensions = useNavigationStore((state) => state.canvasDimensions);
 
-  const conductorRef = useRef<any>(null);
+  const conductorRef = useRef<TConductorInstance | null>(null);
+  const pendingConfettiRef = useRef(false);
   const prefersReducedMotion = useReducedMotion();
-  const [isMounted, setIsMounted] = useState(false);
+  const [shouldRenderConfetti, setShouldRenderConfetti] = useState(false);
   const {
     playCommand,
     playEscape,
@@ -351,7 +355,8 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
   }, [handleScrollAction, prefersReducedMotion]);
 
   useEffect(() => {
-    setIsMounted(true);
+    if (!shouldRenderConfetti) return;
+
     updateCanvasDimensions();
     globalThis.window.addEventListener("resize", updateCanvasDimensions);
     globalThis.window.addEventListener("orientationchange", updateCanvasDimensions);
@@ -359,11 +364,7 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
       globalThis.window.removeEventListener("resize", updateCanvasDimensions);
       globalThis.window.removeEventListener("orientationchange", updateCanvasDimensions);
     };
-  }, [updateCanvasDimensions]);
-
-  useEffect(() => {
-    fetchResumePath(isResumeVisible);
-  }, [isResumeVisible, fetchResumePath]);
+  }, [shouldRenderConfetti, updateCanvasDimensions]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -412,23 +413,29 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
     };
 
     if (isMobileMenuOpen) {
-      // Wait for mobile menu closing animation (400ms) to finish —
-      // layout shifts during the height animation cancel smooth scrollTo calls.
       setIsMobileMenuOpen(false);
-      setTimeout(doScroll, 450);
+      doScroll();
     } else {
       doScroll();
     }
   }, [prefersReducedMotion, setIsMobileMenuOpen]);
 
   const triggerConfetti = () => {
+    pendingConfettiRef.current = true;
     if (conductorRef.current) {
       conductorRef.current.run({ speed: 3, duration: 1000 });
+      pendingConfettiRef.current = false;
+      return;
     }
+    setShouldRenderConfetti(true);
   };
 
-  const handleConfettiInit = ({ conductor }: { conductor: any }) => {
+  const handleConfettiInit = ({ conductor }: { conductor: TConductorInstance }) => {
     conductorRef.current = conductor;
+    if (pendingConfettiRef.current) {
+      conductor.run({ speed: 3, duration: 1000 });
+      pendingConfettiRef.current = false;
+    }
   };
 
   const navProps: NavProps = {
@@ -464,7 +471,7 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
       )}
 
       {/* Confetti Component - Lazy loaded */}
-      {isMounted && (
+      {shouldRenderConfetti && (
         <Suspense fallback={null}>
           <Fireworks
             onInit={handleConfettiInit}

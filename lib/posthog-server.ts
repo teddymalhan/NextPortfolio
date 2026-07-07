@@ -16,7 +16,7 @@ function getPostHogClient(): PostHog {
 
 export async function capturePostHogEvent(
   event: string,
-  properties?: Record<string, any>
+  properties?: Record<string, unknown>
 ) {
   const posthog = getPostHogClient()
   const distinctId = await getDistinctId()

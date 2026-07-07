@@ -11,9 +11,6 @@ interface CanvasDimensions {
 }
 
 interface NavigationState {
-  // Resume state
-  resumePath: string
-
   // Scroll state
   activeSection: string
   isVisible: boolean
@@ -26,10 +23,6 @@ interface NavigationState {
   isMobileMenuOpen: boolean
   commandOpen: boolean
   canvasDimensions: CanvasDimensions
-
-  // Actions - Resume
-  setResumePath: (path: string) => void
-  fetchResumePath: (isResumeVisible: boolean) => Promise<void>
 
   // Actions - Scroll
   setActiveSection: (section: string) => void
@@ -56,8 +49,6 @@ interface NavigationState {
 export const useNavigationStore = createStore<NavigationState>(
   'NavigationStore',
   (set, get) => ({
-    // Initial state
-    resumePath: '/Teddy_Malhan_Resume.pdf',
     activeSection: '',
     isVisible: true,
     lastScrollY: 0,
@@ -71,30 +62,6 @@ export const useNavigationStore = createStore<NavigationState>(
       height: typeof window !== 'undefined' ? window.innerHeight : 600,
     },
 
-    // Resume actions
-    setResumePath: (path) => set({ resumePath: path }),
-
-    fetchResumePath: async (isResumeVisible: boolean) => {
-      if (!isResumeVisible) return
-
-      try {
-        const res = await fetch('/api/resume', {
-          next: { revalidate: 300 }, // Revalidate every 5 minutes
-        })
-        if (res.ok) {
-          const data = await res.json()
-          // Use resume ID + timestamp as cache-buster
-          const timestamp = Date.now()
-          set({
-            resumePath: `/Teddy_Malhan_Resume.pdf?v=${data.id}&t=${timestamp}`,
-          })
-        }
-      } catch (error) {
-        console.error('Failed to fetch resume info:', error)
-        // Fallback to timestamp-based cache-busting
-        set({ resumePath: `/Teddy_Malhan_Resume.pdf?t=${Date.now()}` })
-      }
-    },
 
     // Scroll actions
     setActiveSection: (section) => set({ activeSection: section }),

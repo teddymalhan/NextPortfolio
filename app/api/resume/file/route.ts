@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
             fileSize: activeResume.fileSize,
           })
 
-          return new NextResponse(pdfBuffer as any, {
+          return new NextResponse(pdfBuffer, {
             headers: {
               'Content-Type': 'application/pdf',
               'Content-Disposition': 'inline; filename="Teddy_Malhan_Resume.pdf"',

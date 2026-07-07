@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { Mail, Github, Linkedin } from "lucide-react";
 import { m, useReducedMotion } from "framer-motion";
-import { useNavigationStore } from "@/stores";
 import { usePortfolioSounds } from "@/components/sound-effects";
 
 export default function Footer({
   isResumeVisible,
+  resumePath,
 }: {
   isResumeVisible: boolean;
+  resumePath: string | null;
 }) {
-  const resumePath = useNavigationStore((state) => state.resumePath);
   const prefersReducedMotion = useReducedMotion();
   const { playClick, playSend, playTabSwitch } = usePortfolioSounds();
 
@@ -127,23 +127,16 @@ export default function Footer({
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-medium text-foreground">More</p>
-            {isResumeVisible && (
-              <Link
+            {isResumeVisible && resumePath && (
+              <a
                 href={resumePath}
                 target="_blank"
                 rel="noreferrer noopener"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const freshUrl = resumePath.includes("&t=")
-                    ? `${resumePath.split("&t=")[0]}&t=${Date.now()}`
-                    : `${resumePath}?t=${Date.now()}`;
-                  playClick();
-                  window.open(freshUrl, "_blank", "noopener,noreferrer");
-                }}
+                onClick={playClick}
                 className="text-muted-foreground hover:text-foreground"
               >
                 Resume
-              </Link>
+              </a>
             )}
             <Link
               href="#about"

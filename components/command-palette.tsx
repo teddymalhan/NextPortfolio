@@ -27,7 +27,7 @@ interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   isResumeVisible: boolean;
-  resumePath: string;
+  resumePath: string | null;
   scrollToSection: (href: string) => void;
   triggerConfetti: () => void;
 }
@@ -101,15 +101,11 @@ function CommandPalette({
         <CommandSeparator />
 
         <CommandGroup heading="Quick Actions">
-          {isResumeVisible && (
+          {isResumeVisible && resumePath && (
             <CommandItem
               onSelect={() =>
                 runCommand(() => {
-                  // Force fresh fetch by adding current timestamp
-                  const freshUrl = resumePath.includes("&t=")
-                    ? `${resumePath.split("&t=")[0]}&t=${Date.now()}`
-                    : `${resumePath}?t=${Date.now()}`;
-                  window.open(freshUrl, "_blank", "noopener,noreferrer");
+                  window.open(resumePath, "_blank", "noopener,noreferrer");
                 })
               }
             >

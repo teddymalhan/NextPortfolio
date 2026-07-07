@@ -14,7 +14,8 @@ export default async function Home() {
   cacheLife('hours')
   cacheTag('home-page')
 
-  // Fetch resume visibility server-side before rendering
   const isResumeVisible = await getResumeVisibility()
-  return <HomeClient isResumeVisible={isResumeVisible} />
+  const resumePath = isResumeVisible ? '/api/resume/file' : null
+
+  return <HomeClient isResumeVisible={isResumeVisible} resumePath={resumePath} />
 }
