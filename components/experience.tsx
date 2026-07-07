@@ -9,7 +9,7 @@ interface ExperienceItem {
   role: string;
   period: string;
   location: string;
-  logo: string;
+  logo?: string;
   logoStyle?: "circular" | "square" | "padded";
   tags?: string[];
 }
@@ -20,8 +20,6 @@ const experiences: ExperienceItem[] = [
     role: "Software Engineer Intern",
     period: "May 2026 - Aug 2026",
     location: "Vancouver, BC",
-    logo: "/ea-logo-full.jpg",
-    logoStyle: "padded",
     tags: ["⎈ PI&E Game Server Hosting"],
   },
   {
@@ -29,8 +27,6 @@ const experiences: ExperienceItem[] = [
     role: "Software Engineer Intern",
     period: "May 2025 - Aug 2025",
     location: "Toronto, ON",
-    logo: "/ea-logo-full.jpg",
-    logoStyle: "padded",
     tags: ["🕹️ Digital Platform: Arrival"],
   },
   {
@@ -152,45 +148,44 @@ export function Experience() {
                     )}
                   </div>
 
-                  {/* Logo */}
-                  <div className="flex-shrink-0">
-                    <div className="group-hover:scale-105 transition-transform duration-300">
-                      <div
-                        className={`relative w-16 h-16 flex items-center justify-center overflow-hidden bg-background border border-border/40 shadow-sm
-                          ${
-                            experience.logoStyle === "circular"
-                              ? "rounded-full"
-                              : experience.logoStyle === "padded"
-                                ? "rounded-2xl p-2.5"
-                                : "rounded-xl"
-                          }`}
-                      >
-                        <div className={`relative w-full h-full`}>
-                          <Image
-                            src={experience.logo}
-                            alt={`${experience.company} logo`}
-                            fill
-                            className={
-                              experience.company === "Electronic Arts"
-                                ? "object-cover scale-185"
-                                : experience.company === "Develop for Good"
+                  {experience.logo && (
+                    <div className="flex-shrink-0">
+                      <div className="group-hover:scale-105 transition-transform duration-300">
+                        <div
+                          className={`relative w-16 h-16 flex items-center justify-center overflow-hidden bg-background border border-border/40 shadow-sm
+                            ${
+                              experience.logoStyle === "circular"
+                                ? "rounded-full"
+                                : experience.logoStyle === "padded"
+                                  ? "rounded-2xl p-2.5"
+                                  : "rounded-xl"
+                            }`}
+                        >
+                          <div className={`relative w-full h-full`}>
+                            <Image
+                              src={experience.logo}
+                              alt={`${experience.company} logo`}
+                              fill
+                              className={
+                                experience.company === "Develop for Good"
                                   ? "object-cover scale-180"
                                   : experience.company === "SFU Blueprint"
                                     ? "object-cover scale-180"
                                     : experience.logoStyle === "circular"
                                       ? "object-cover"
                                       : "object-contain"
-                            }
-                            sizes="(min-resolution: 2dppx) 128px, 64px"
-                            loading="lazy"
-                            decoding="async"
-                            quality={90}
-                            unoptimized={experience.logo.startsWith("/")}
-                          />
+                              }
+                              sizes="(min-resolution: 2dppx) 128px, 64px"
+                              loading="lazy"
+                              decoding="async"
+                              quality={90}
+                              unoptimized={experience.logo.startsWith("/")}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             );
