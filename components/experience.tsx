@@ -94,7 +94,7 @@ export function Experience() {
           {experiences.map((experience) => {
             return (
               <div
-                key={experience.company}
+                key={`${experience.company}-${experience.period}`}
                 className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 md:gap-16 pb-16 last:pb-0 group"
               >
                 {/* Left side - Date & Location */}
@@ -185,6 +185,7 @@ export function Experience() {
                             loading="lazy"
                             decoding="async"
                             quality={90}
+                            unoptimized={experience.logo.startsWith("/")}
                           />
                         </div>
                       </div>

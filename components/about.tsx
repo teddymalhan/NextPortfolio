@@ -38,7 +38,6 @@ export function About() {
                 height={176}
                 className="size-full object-cover object-[center_top]"
                 style={{ objectPosition: '50% 30%' }}
-                priority
                 sizes="(max-width: 768px) 288px, 352px"
                 quality={90}
               />

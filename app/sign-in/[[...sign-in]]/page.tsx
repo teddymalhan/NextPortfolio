@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { SignInContent } from './sign-in-content'
+import { ClerkProviderWrapper } from '@/components/clerk-provider-wrapper'
 
 export const metadata: Metadata = {
   title: 'Sign In',
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen" />}>
-      <SignInContent />
-    </Suspense>
+    <ClerkProviderWrapper>
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen" />}>
+        <SignInContent />
+      </Suspense>
+    </ClerkProviderWrapper>
   )
 }

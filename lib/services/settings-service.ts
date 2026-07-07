@@ -33,7 +33,13 @@ async function getCachedResumeVisibility(): Promise<boolean> {
   cacheLife('resume-data')
   cacheTag('resume-visibility')
 
-  return getResumeVisibilityDirect()
+  try {
+    return await getResumeVisibilityDirect()
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error('Error fetching cached resume visibility:', errorMessage)
+    return true
+  }
 }
 
 export const settingsService = {

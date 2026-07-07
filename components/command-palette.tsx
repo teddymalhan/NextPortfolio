@@ -10,7 +10,6 @@ import {
   Linkedin,
   LogIn,
   Shield,
-  LogOut,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -21,7 +20,6 @@ import {
   CommandItem,
   CommandSeparator,
 } from "@/components/ui/command";
-import { useAuth, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { usePortfolioSounds } from "@/components/sound-effects";
 
@@ -42,8 +40,6 @@ function CommandPalette({
   scrollToSection,
   triggerConfetti,
 }: CommandPaletteProps) {
-  const { isSignedIn } = useAuth();
-  const { signOut } = useClerk();
   const router = useRouter();
   const { playSelect, playEscape, playConfetti } = usePortfolioSounds();
 
@@ -61,11 +57,7 @@ function CommandPalette({
   };
 
   const handleAdminClick = () => {
-    if (isSignedIn) {
-      router.push("/admin/dashboard");
-    } else {
-      router.push("/sign-in?redirect_url=/admin/dashboard");
-    }
+    router.push("/admin/dashboard");
   };
 
   return (
@@ -150,31 +142,16 @@ function CommandPalette({
         <CommandSeparator />
 
         <CommandGroup heading="Authentication">
-          {!isSignedIn ? (
-            <>
-              <CommandItem
-                onSelect={() => runCommand(() => router.push("/sign-in"))}
-              >
-                <LogIn className="mr-2 h-4 w-4" />
-                <span>Sign In</span>
-              </CommandItem>
-            </>
-          ) : (
-            <>
-              <CommandItem onSelect={() => runCommand(handleAdminClick)}>
-                <Shield className="mr-2 h-4 w-4" />
-                <span>Admin Dashboard</span>
-              </CommandItem>
-              <CommandItem
-                onSelect={() =>
-                  runCommand(() => signOut(() => router.push("/")))
-                }
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Sign Out</span>
-              </CommandItem>
-            </>
-          )}
+          <CommandItem
+            onSelect={() => runCommand(() => router.push("/sign-in"))}
+          >
+            <LogIn className="mr-2 h-4 w-4" />
+            <span>Sign In</span>
+          </CommandItem>
+          <CommandItem onSelect={() => runCommand(handleAdminClick)}>
+            <Shield className="mr-2 h-4 w-4" />
+            <span>Admin Dashboard</span>
+          </CommandItem>
         </CommandGroup>
 
         <CommandSeparator />
