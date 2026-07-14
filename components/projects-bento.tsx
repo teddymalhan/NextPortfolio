@@ -87,7 +87,7 @@ export function ProjectsBento() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className={`${project.heroImageFit === "contain" ? "object-contain p-6" : "object-cover"} transition-transform duration-500 group-hover:scale-[1.03]`}
                         quality={90}
-                        loading="lazy"
+                        loading={project.cardImageLoading ?? "lazy"}
                         decoding="async"
                       />
                       {project.slug === "kaeru" && (

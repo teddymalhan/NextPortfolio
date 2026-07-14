@@ -45,7 +45,7 @@ const experiences: ExperienceItem[] = [
   {
     company: "SFU Blueprint",
     role: "Software Developer",
-    period: "Nov 2025 - Present",
+    period: "June 2024 - Present",
     location: "Vancouver, BC",
     logo: "https://media.licdn.com/dms/image/v2/D560BAQGUjTCDhAjcFA/company-logo_200_200/company-logo_200_200/0/1690849546053/sfu_blueprint_logo?e=2147483647&v=beta&t=JFlsmyor7g50Tsl22WLuHPB8UODRlSMUKJ91Ek3vOxU",
     logoStyle: "padded",

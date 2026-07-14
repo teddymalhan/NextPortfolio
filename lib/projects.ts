@@ -69,6 +69,7 @@ export interface Project {
   cta: string;
   heroImage: string;
   heroImageFit?: "cover" | "contain";
+  cardImageLoading?: "eager" | "lazy";
   gridClassName: string;
 
   // External links
@@ -78,13 +79,10 @@ export interface Project {
   links: ProjectLink[];
 
   // Detail page - Hero
-  features: ProjectFeature[];
   desktopMockup?: string;
   mobileMockups?: string[];
-
-  // Detail page - Terminal
-  terminalSteps: TerminalStep[];
-  terminalProgressMessage?: string;
+  detailHeroImageFit?: "cover" | "contain";
+  detailHeroAspect?: "standard" | "banner";
 
   // Detail page - Demo
   demoMedia?: ProjectMedia;
@@ -95,10 +93,6 @@ export interface Project {
   // Detail page - Sidebar
   timeline: TimelineEntry[];
   tools: string[];
-
-  // Detail page - Results
-  results?: string[];
-  takeaways?: string[];
 }
 
 // Simplified type for bento card display
@@ -116,127 +110,100 @@ type BentoProject = Pick<
   | "type"
   | "heroImage"
   | "heroImageFit"
+  | "cardImageLoading"
   | "gridClassName"
 >;
 
 // Project data
 const projects: Project[] = [
   {
-    slug: "electronic-arts",
-    name: "Electronic Arts",
-    title: "Arrival Copilot at Electronic Arts",
+    slug: "pallasdb",
+    name: "PallasDB",
+    title: "PallasDB",
     tagline:
-      "AI agent for level/quest generation and multi-tenant GraphQL MCP Server at EA's Central Tech team",
-    period: "May 2025 to Aug 2025 (Internship)",
-    year: 2025,
+      "A self-hosted, distributed key-value database in Go with an LSM storage engine and Raft-backed replication",
+    period: "2026 – Present",
+    year: 2026,
     technologies: [
-      "Kubernetes",
-      "Python",
-      "Scala",
-      "FastAPI",
-      "LangGraph",
-      "Rust",
-      "GraphQL",
-      "AWS EKS",
-      "ArgoCD",
-      "Docker",
-      "Helm",
+      "Go",
+      "LSM Trees",
+      "Write-Ahead Log",
+      "SSTables",
+      "gRPC",
+      "Protocol Buffers",
+      "HashiCorp Raft",
+      "Serf",
     ],
-    type: "internship",
+    type: "opensource",
     featured: true,
     description:
-      "Built an AI agent for level & quest generation at EADP Arrival, saving 100+ hours/month for game producers.",
-    cta: "Read More",
-    heroImage: "/ea-banner.png",
-    heroImageFit: "contain",
+      "Built a distributed key-value database in Go with crash-safe WAL persistence, SSTable compaction, gRPC APIs, and Raft-backed replication.",
+    cta: "Explore PallasDB",
+    heroImage: "/pallasdb-banner.png",
+    heroImageFit: "cover",
+    cardImageLoading: "eager",
+    detailHeroImageFit: "contain",
+    detailHeroAspect: "banner",
     gridClassName: "col-span-3 lg:col-span-2",
-    href: "https://www.ea.com",
-    links: [],
-    features: [
+    href: "https://pallasdb.com",
+    github: "https://github.com/PallasDB/PallasDB",
+    links: [
       {
-        text: "AI agent for level & quest generation (FastAPI + LangGraph)",
-        dotColor: "#2563EB",
+        label: "Visit PallasDB",
+        href: "https://pallasdb.com",
+        icon: "ExternalLink",
       },
       {
-        text: "JSON-RPC integration with Scala monolith — 100+ hrs/month saved",
-        dotColor: "#3B82F6",
+        label: "View on GitHub",
+        href: "https://github.com/PallasDB/PallasDB",
+        icon: "Github",
       },
       {
-        text: "Multi-tenant Apollo GraphQL MCP Server in Rust",
-        dotColor: "#60A5FA",
-      },
-      {
-        text: "75% compute cost reduction on AWS EKS (Kubernetes)",
-        dotColor: "#93C5FD",
-      },
-      {
-        text: "10k+ concurrent requests sustained under k6 stress-tests",
-        dotColor: "#1D4ED8",
+        label: "Read Documentation",
+        href: "https://pallasdb.github.io/docs/",
+        icon: "FileText",
       },
     ],
-    terminalSteps: [
-      { text: "docker build -t arrival-copilot .", type: "command" },
-      { text: "Building FastAPI + LangGraph image...", type: "output", delay: 40 },
-      { text: "helm upgrade --install arrival-copilot ./chart", type: "command" },
-      { text: "Deploying to AWS EKS via ArgoCD...", type: "output", delay: 40 },
-      { text: "k6 run stress-test.js", type: "command" },
-      { text: "Running 10k concurrent virtual users...", type: "output", delay: 40 },
-      { text: "All thresholds passed ✓", type: "success", delay: 40 },
-    ],
-    terminalProgressMessage: "Deploying to AWS EKS via ArgoCD...",
     sections: [
       {
         title: "Overview",
-        emoji: "🎮",
+        emoji: "🗄️",
         paragraphs: [
-          "At Electronic Arts Digital Platform,  I joined the Arrival team and built Arrival Copilot; a full-stack AI agent that accelerates level and quest generation for game producers.",
-          "By exposing GraphQL operations as MCP tools via LangGraph, Arrival Copilot enables real-time querying across millions of records, eliminating 100+ hours of manual work per month for the studio.",
+          "PallasDB is an operator-owned, self-hosted key-value data plane for platform teams. It keeps service metadata and runtime configuration revisioned, observable, and strongly consistent across a cluster.",
+          "The database is built from first principles in Go: raw byte encoding, crash-safe persistence, sorted storage, a SQL layer, gRPC transport, and Raft-backed server mode.",
         ],
       },
       {
-        title: "Arrival Copilot",
-        emoji: "🤖",
+        title: "Storage Engine",
+        emoji: "⚙️",
         paragraphs: [
-          "Engineered the AI agent backend using Python FastAPI and LangGraph, with a JSON-RPC bridge to integrate seamlessly with EA's existing Scala monolith. Game producers can now query, generate, and iterate on level and quest content through a natural language interface.",
-          "The agent exposes GraphQL operations as MCP tools, enabling real-time querying for millions of records across the platform while maintaining strict latency requirements.",
+          "Every committed write is persisted through a write-ahead log with fsync and CRC32 checksums before it is acknowledged. A sorted in-memory memtable flushes to durable SSTables, while multi-level merge iterators and compaction maintain an ordered view for range scans.",
+          "The embedded engine also provides snapshot transactions with conflict detection, plus a recursive-descent SQL parser and expression evaluator for table operations.",
         ],
       },
       {
-        title: "Adding Multi-Tenancy to Apollo MCP Server written in Rust",
-        emoji: "🦀",
+        title: "Distributed Operation",
+        emoji: "🌐",
         paragraphs: [
-          "Architected multi-tenancy support for the Apollo GraphQL MCP Server written in Rust, consolidating deployments across multiple namespaces on AWS EKS (Kubernetes). This reduced compute spend by 75% by eliminating redundant per-namespace deployments.",
-          "Delivered the microservice end-to-end: containerized with Docker, packaged with Helm, and deployed via ArgoCD and GitLab CI/CD pipelines. The service sustained 10k+ concurrent requests under k6 stress-tests with no degradation.",
+          "The gRPC API exposes Get, Put, Delete, and server-streaming Range operations over Protocol Buffers. In cluster mode, mutating requests are encoded as Raft commands and applied by the leader to the storage engine.",
+          "HashiCorp Raft provides strongly consistent replicated writes, while Serf gossip discovers cluster members. Nodes can serve reads from local FSM state, and snapshots restore state by atomically swapping the storage directory.",
         ],
       },
     ],
-    timeline: [{ date: "Summer 2025" }],
+    timeline: [{ date: "2026 – Present" }],
     tools: [
-      "Python 3.12",
-      "FastAPI",
-      "LangGraph",
-      "JSON-RPC",
-      "Scala",
-      "Rust",
-      "Apollo GraphQL",
-      "AWS EKS",
-      "Kubernetes",
-      "ArgoCD",
-      "Docker",
-      "Helm",
-      "GitLab CI/CD",
-      "k6",
-    ],
-    results: [
-      "Saved 100+ hours of manual work per month for game producers",
-      "Reduced compute spend by 75% via multi-tenant Rust MCP Server on AWS EKS",
-      "Sustained 10k+ concurrent requests under k6 stress-tests",
-      "Shipped AI agent integrating FastAPI, LangGraph, and JSON-RPC with Scala monolith",
-    ],
-    takeaways: [
-      "Multi-tenancy is a force-multiplier for infrastructure cost efficiency",
-      "LangGraph enables reliable, stateful AI agent workflows at scale",
-      "Integrating new microservices with legacy monoliths requires careful API boundary design",
+      "Go 1.25",
+      "LSM Trees",
+      "Write-Ahead Log",
+      "SSTables",
+      "MVCC Transactions",
+      "SQL",
+      "gRPC",
+      "Protocol Buffers",
+      "HashiCorp Raft",
+      "Serf",
+      "Cobra",
+      "Viper",
     ],
   },
   {
@@ -278,20 +245,6 @@ const projects: Project[] = [
         icon: "FileText",
       },
     ],
-    features: [
-      { text: "CRT television simulation", dotColor: "#4CAF50" },
-      { text: "AI-generated era-relevant ads", dotColor: "#2196F3" },
-      { text: "Authentic retro viewing experience", dotColor: "#FF9800" },
-      { text: "Serverless cloud architecture", dotColor: "#9C27B0" },
-    ],
-    terminalSteps: [
-      { text: "./mvnw spring-boot:run", type: "command" },
-      { text: "Starting Spring Boot application...", type: "output", delay: 40 },
-      { text: "Initializing Google Cloud Tasks...", type: "output", delay: 40 },
-      { text: "Loading AI ad generator...", type: "output", delay: 40 },
-      { text: "Server running on http://localhost:8080", type: "success", delay: 40 },
-    ],
-    terminalProgressMessage: "Generating retro advertisements...",
     sections: [
       {
         title: "Overview",
@@ -319,11 +272,6 @@ const projects: Project[] = [
       "Google Cloud Run",
       "Google Cloud Tasks",
       "Generative AI",
-    ],
-    takeaways: [
-      "Generative AI enables creative content generation at scale",
-      "Serverless architecture provides cost-effective scalability",
-      "Nostalgia-driven experiences create unique user engagement",
     ],
   },
   {
@@ -356,24 +304,6 @@ const projects: Project[] = [
         icon: "Github",
       },
     ],
-    features: [
-      { text: "Secure hash-based versioning", dotColor: "#14F195" },
-      { text: "IC, Rank IC & t-stat tracking", dotColor: "#9945FF" },
-      { text: "Gemini AI run summaries", dotColor: "#4285F4" },
-      { text: "Terminal UI with Textual", dotColor: "#FF9800" },
-      { text: "Vultr cloud storage integration", dotColor: "#00BCD4" },
-    ],
-    terminalSteps: [
-      { text: "argus init", type: "command" },
-      { text: "Initializing Argus project...", type: "output", delay: 40 },
-      { text: "Setting up local database...", type: "output", delay: 40 },
-      { text: "Argus initialized", type: "success", delay: 40 },
-      { text: "argus commit --model rf_v2 --dataset signals_q4", type: "command" },
-      { text: "Hashing artifacts...", type: "output", delay: 40 },
-      { text: "Recording IC: 0.042, Rank IC: 0.038, t-stat: 2.31", type: "output", delay: 40 },
-      { text: "Run committed: hash_8x7f...", type: "success", delay: 40 },
-    ],
-    terminalProgressMessage: "Committing run to Argus...",
     sections: [
       {
         title: "The Problem",
@@ -424,16 +354,6 @@ const projects: Project[] = [
       "SQLite",
       "Vultr",
     ],
-    results: [
-      "Built complete hash-based versioning system for quant workflows",
-      "Rust core with Python/Textual TUI integration",
-      "Terminal UI for seamless workflow integration",
-    ],
-    takeaways: [
-      "Hash-based versioning provides immutable audit trails for experiments",
-      "Terminal UIs can provide powerful developer experiences",
-      "Quantitative research requires specialized tooling beyond traditional version control",
-    ],
   },
   {
     slug: "digital-scorecards",
@@ -460,25 +380,6 @@ const projects: Project[] = [
         icon: "ExternalLink",
       },
     ],
-    features: [
-      { text: "Real-time agent performance tracking", dotColor: "#4CAF50" },
-      { text: "Customizable scoring metrics and criteria", dotColor: "#2196F3" },
-      {
-        text: "Manager dashboard with drill-down analytics",
-        dotColor: "#FF9800",
-      },
-      { text: "Integration with Dialpad's contact center", dotColor: "#9C27B0" },
-      { text: "Automated performance reports", dotColor: "#00BCD4" },
-    ],
-    terminalSteps: [
-      { text: "npm run build", type: "command" },
-      { text: "Compiling Vue.js components...", type: "output", delay: 40 },
-      { text: "Building Django backend...", type: "output", delay: 40 },
-      { text: "Running test suite...", type: "output", delay: 40 },
-      { text: "All 47 tests passed", type: "success", delay: 40 },
-      { text: "Deploying to GCP...", type: "output", delay: 40 },
-    ],
-    terminalProgressMessage: "Deploying to Google Cloud Platform...",
     sections: [
       {
         title: "Overview",
@@ -514,16 +415,6 @@ const projects: Project[] = [
       "PostgreSQL",
       "Memcached",
       "WebSockets",
-    ],
-    results: [
-      "Shipped to production serving 1000+ contact center agents",
-      "Reduced manual performance review time by 60%",
-      "Achieved 99.9% uptime with auto-scaling infrastructure",
-    ],
-    takeaways: [
-      "Enterprise software requires careful consideration of scale and reliability",
-      "Close collaboration with product managers leads to better user experiences",
-      "Performance optimization is critical for real-time dashboards",
     ],
   },
   
@@ -565,22 +456,6 @@ const projects: Project[] = [
         icon: "Github",
       },
     ],
-    features: [
-      { text: "AI Financial Operations automation", dotColor: "#4CAF50" },
-      { text: "Real-time fraud detection with risk scoring", dotColor: "#FF9800" },
-      { text: "Subscription management and cancellation", dotColor: "#2196F3" },
-      { text: "AI phone call and email agents", dotColor: "#9C27B0" },
-      { text: "Agent dashboard with live status monitoring", dotColor: "#00BCD4" },
-      { text: "Complete activity audit trail", dotColor: "#E91E63" },
-    ],
-    terminalSteps: [
-      { text: "npm run dev", type: "command" },
-      { text: "Starting development server...", type: "output", delay: 40 },
-      { text: "Initializing Plaid integration...", type: "output", delay: 40 },
-      { text: "Loading AI agents...", type: "output", delay: 40 },
-      { text: "Server running on http://localhost:3000", type: "success", delay: 40 },
-    ],
-    terminalProgressMessage: "Launching financial operations platform...",
     sections: [
       {
         title: "Overview",
@@ -609,17 +484,6 @@ const projects: Project[] = [
       "TailwindCSS",
       "AI Agents",
     ],
-    results: [
-      "Built for StormHacks 2025",
-      "Automated cancellations across multiple providers",
-      "Real-time fraud detection and dispute filing",
-      "Complete financial operations dashboard",
-    ],
-    takeaways: [
-      "AI agents can handle complex customer service workflows",
-      "Real-time monitoring protects against financial fraud",
-      "Automation significantly reduces financial management burden",
-    ],
   },
   {
     slug: "gradgains",
@@ -646,20 +510,6 @@ const projects: Project[] = [
         icon: "Github",
       },
     ],
-    features: [
-      { text: "Social financial tracking", dotColor: "#4CAF50" },
-      { text: "Peer spending comparisons", dotColor: "#2196F3" },
-      { text: "Budget recommendations", dotColor: "#FF9800" },
-      { text: "Achievement gamification", dotColor: "#9C27B0" },
-    ],
-    terminalSteps: [
-      { text: "pnpm run dev", type: "command" },
-      { text: "Running database migrations...", type: "output", delay: 40 },
-      { text: "Seeding demo data...", type: "output", delay: 40 },
-      { text: "Starting Next.js development server...", type: "output", delay: 40 },
-      { text: "Ready on http://localhost:3000", type: "success", delay: 40 },
-    ],
-    terminalProgressMessage: "Building financial insights...",
     sections: [
       {
         title: "Overview",
@@ -687,20 +537,9 @@ const projects: Project[] = [
       "TailwindCSS",
       "NextAuth.js",
     ],
-    results: [
-      "Won Hack-The-Sem 2024 Hackathon",
-      "Built complete MVP with auth, dashboard, and social features",
-      "Demonstrated viable product-market fit with student testers",
-    ],
-    takeaways: [
-      "Gamification can make 'boring' tasks engaging",
-      "Privacy-first design enables sensitive data sharing",
-      "Social context can motivate positive behavior change",
-    ],
   },
 ];
 
-// Helper functions
 export function getProjectBySlug(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
 }
@@ -724,6 +563,7 @@ export function getBentoProjects(): BentoProject[] {
       type,
       heroImage,
       heroImageFit,
+      cardImageLoading,
       gridClassName,
     }) => ({
       slug,
@@ -738,6 +578,7 @@ export function getBentoProjects(): BentoProject[] {
       type,
       heroImage,
       heroImageFit,
+      cardImageLoading,
       gridClassName,
     })
   );
