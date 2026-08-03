@@ -33,16 +33,16 @@ export default function Footer({
             Teddy Malhan
           </h3>
           <Link
-            href="mailto:ama367@sfu.ca"
+            href="mailto:teddymalhan@gmail.com"
             onClick={playSend}
             className="mt-2 block text-base md:text-lg text-foreground/90 hover:text-foreground underline decoration-border/50 hover:decoration-primary/50 underline-offset-4"
           >
-            ama367@sfu.ca
+            teddymalhan@gmail.com
           </Link>
 
           <div className="mt-5 flex gap-2">
             <Link
-              href="mailto:ama367@sfu.ca"
+              href="mailto:teddymalhan@gmail.com"
               aria-label="Email"
               onClick={playSend}
               className="fill rounded-md p-2"
@@ -118,7 +118,7 @@ export default function Footer({
               LinkedIn
             </Link>
             <Link
-              href="mailto:ama367@sfu.ca"
+              href="mailto:teddymalhan@gmail.com"
               className="text-muted-foreground hover:text-foreground"
               onClick={playSend}
             >
