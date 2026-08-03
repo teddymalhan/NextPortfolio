@@ -51,7 +51,7 @@ export function About() {
               Hi, I&apos;m Teddy and I&apos;m a Computer Science student at Simon Fraser Unversity, focused on building scalable and reliable infrastructure to serve millions of users.
             </p>
             <p className="text-foreground">
-              I like to read articles about AI &amp; infrastructure on{" "}
+              I like to read articles about AI &amp; infra on{" "}
               <a
                 href="https://news.ycombinator.com"
                 target="_blank"
@@ -70,11 +70,10 @@ export function About() {
               >
                 X
                 <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
-              </a>{" "}
-              (have I mentioned how cool X is?), &
+              </a>{" "}, and I enjoy playing table tennis, lifting weights & geeking out over how large scale systems are built.
             </p>
             <p className="text-foreground">
-              In my free time, I love to play table tennis, lift weights, and geek out over how large-scale systems are built. If you&apos;re building something interesting or want to chat, feel free to reach out!
+              If you&apos;re building something interesting or want to chat, feel free to reach out!
             </p>
 
           </div>
