@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { m, useReducedMotion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
 export function About() {
   const prefersReducedMotion = useReducedMotion();
@@ -48,6 +49,29 @@ export function About() {
           <div className="mx-auto max-w-prose space-y-5 text-left text-foreground text-lg md:text-xl leading-relaxed md:space-y-6">
             <p className="text-foreground">
               Hi, I&apos;m Teddy and I&apos;m a Computer Science student at Simon Fraser Unversity, focused on building scalable and reliable infrastructure to serve millions of users.
+            </p>
+            <p className="text-foreground">
+              I like to read articles about AI &amp; infrastructure on{" "}
+              <a
+                href="https://news.ycombinator.com"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-baseline gap-0.5 underline decoration-border/50 underline-offset-4 hover:decoration-primary/50"
+              >
+                Hacker News
+                <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://x.com/teddymalhan"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-baseline gap-0.5 underline decoration-border/50 underline-offset-4 hover:decoration-primary/50"
+              >
+                X
+                <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
+              </a>{" "}
+              (have I mentioned how cool X is?), &
             </p>
             <p className="text-foreground">
               In my free time, I love to play table tennis, lift weights, and geek out over how large-scale systems are built. If you&apos;re building something interesting or want to chat, feel free to reach out!
