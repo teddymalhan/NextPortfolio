@@ -47,13 +47,10 @@ export function About() {
           {/* Copy */}
           <div className="mx-auto max-w-prose space-y-5 text-left text-foreground text-lg md:text-xl leading-relaxed md:space-y-6">
             <p className="text-foreground">
-              Hi, I&apos;m Teddy and I&apos;m a Computer Science student at Simon Fraser Unversity, focused on distributed systems, infrastructure and product engineering.
+              Hi, I&apos;m Teddy and I&apos;m a Computer Science student at Simon Fraser Unversity, focused on building scalable and reliable infrastructure to serve millions of users.
             </p>
             <p className="text-foreground">
-              For me, programming is all about building and fixing. I love working on solutions that solve real problems while being scalable and reliable.
-            </p>
-            <p className="text-foreground">
-              In my free time, I love to play badminton, lift weights, and geek out over how large-scale systems are built. If you&apos;re building something interesting or want to chat, feel free to reach out!
+              In my free time, I love to play table tennis, lift weights, and geek out over how large-scale systems are built. If you&apos;re building something interesting or want to chat, feel free to reach out!
             </p>
 
           </div>
