@@ -46,10 +46,12 @@ export function InstantHighlighter({
   } as React.CSSProperties;
 
   return (
-    <ElementTag {...props}>
-      <span className={cn("inline", className)} style={highlightStyle}>
-        {children}
-      </span>
+    <ElementTag
+      {...props}
+      className={cn("inline-block", className)}
+      style={{ ...highlightStyle, ...props.style }}
+    >
+      {children}
     </ElementTag>
   );
 }
