@@ -117,6 +117,86 @@ type BentoProject = Pick<
 // Project data
 const projects: Project[] = [
   {
+    slug: "cloudreaper-alerts",
+    name: "CloudReaper Alerts",
+    title: "CloudReaper Alerts",
+    tagline:
+      "AWS-native orphan resource alerts delivered to Slack through scheduled and event-driven Lambdas",
+    period: "2026 – Present",
+    year: 2026,
+    technologies: [
+      "Go",
+      "AWS Lambda",
+      "CloudFormation",
+      "EventBridge",
+      "SQS",
+      "Slack API",
+    ],
+    type: "opensource",
+    featured: true,
+    description:
+      "Built an AWS-native Go system that finds orphaned resources on a schedule or near real time, then delivers actionable alerts to Slack through SQS-backed Lambdas.",
+    cta: "Explore CloudReaper Alerts",
+    heroImage: "/cloudreaper-alerts.png",
+    heroImageFit: "cover",
+    cardImageLoading: "eager",
+    gridClassName: "col-span-3 lg:col-span-2",
+    href: "https://github.com/teddymalhan/cloudreaper-alerts",
+    github: "https://github.com/teddymalhan/cloudreaper-alerts",
+    links: [
+      {
+        label: "View on GitHub",
+        href: "https://github.com/teddymalhan/cloudreaper-alerts",
+        icon: "Github",
+      },
+      {
+        label: "View Releases",
+        href: "https://github.com/teddymalhan/cloudreaper-alerts/releases",
+        icon: "ExternalLink",
+      },
+    ],
+    sections: [
+      {
+        title: "Overview",
+        emoji: "☁️",
+        paragraphs: [
+          "CloudReaper Alerts is an AWS-native system for finding orphaned cloud resources and sending actionable findings to Slack. It runs entirely inside your AWS account without an EC2 host or long-running daemon.",
+          "A guided cross-platform CLI validates AWS and Slack access, uploads release artifacts, deploys the CloudFormation stack, triggers an initial scan, and verifies alert delivery.",
+        ],
+      },
+      {
+        title: "Detection and Delivery",
+        emoji: "🔔",
+        paragraphs: [
+          "An EventBridge schedule invokes the scanner Lambda every 15 minutes. Optional CloudTrail events feed a reactor Lambda for near-real-time EC2 orphan detection.",
+          "Findings travel through an SQS queue with a dead-letter queue before the notifier Lambda posts them to Slack. Bot credentials are stored in AWS Secrets Manager.",
+        ],
+      },
+      {
+        title: "Operations",
+        emoji: "⚙️",
+        paragraphs: [
+          "The Go CLI supports install, status, immediate scans, test alerts, and clean uninstallation. CloudFormation is the primary deployment target, with a Terraform and Floci path retained for local integration testing.",
+          "Automated releases publish macOS, Linux, and Windows CLI archives plus deployable Lambda packages for amd64 and arm64.",
+        ],
+      },
+    ],
+    timeline: [{ date: "2026 – Present" }],
+    tools: [
+      "Go",
+      "AWS Lambda",
+      "AWS CloudFormation",
+      "Amazon EventBridge",
+      "Amazon SQS",
+      "AWS Secrets Manager",
+      "AWS CloudTrail",
+      "Slack API",
+      "Terraform",
+      "Floci",
+      "GoReleaser",
+    ],
+  },
+  {
     slug: "pallasdb",
     name: "PallasDB",
     title: "PallasDB",
@@ -141,10 +221,9 @@ const projects: Project[] = [
     cta: "Explore PallasDB",
     heroImage: "/pallasdb-banner.png",
     heroImageFit: "cover",
-    cardImageLoading: "eager",
     detailHeroImageFit: "contain",
     detailHeroAspect: "banner",
-    gridClassName: "col-span-3 lg:col-span-2",
+    gridClassName: "col-span-3 lg:col-span-1",
     href: "https://pallasdb.com",
     github: "https://github.com/PallasDB/PallasDB",
     links: [
@@ -204,74 +283,6 @@ const projects: Project[] = [
       "Serf",
       "Cobra",
       "Viper",
-    ],
-  },
-  {
-    slug: "retrowatch",
-    name: "RetroWatch",
-    title: "RetroWatch",
-    tagline: "Watch content on a CRT with AI-generated era-relevant ads",
-    period: "December 2025 - January 2026",
-    year: 2025,
-    technologies: [
-      "Java",
-      "Spring Boot",
-      "React",
-      "Vite",
-      "Google Cloud",
-    ],
-    type: "personal",
-    description:
-      "Streaming platform that simulates watching TV on a vintage CRT. Complete with scan lines, color bleeding, and AI-generated period-appropriate ads. Built with Spring Boot and React, deployed serverless on Google Cloud.",
-    cta: "View Project",
-    heroImage: "/retrowatch.png",
-    gridClassName: "col-span-3 lg:col-span-1",
-    href: "https://full-stack-app-467902453710.us-west1.run.app/",
-    demo: "https://full-stack-app-467902453710.us-west1.run.app/",
-    links: [
-      {
-        label: "View Live Demo",
-        href: "https://retrowatch.malhan.ca/",
-        icon: "ExternalLink",
-      },
-      {
-        label: "View on GitHub",
-        href: "https://github.com/teddymalhan/RetroWatch",
-        icon: "Github",
-      },
-      {
-        label: "API Documentation",
-        href: "https://retrowatch.malhan.ca/docs/",
-        icon: "FileText",
-      },
-    ],
-    sections: [
-      {
-        title: "Overview",
-        emoji: "📺",
-        paragraphs: [
-          "Remember watching Saturday morning cartoons on a chunky CRT TV? RetroWatch recreates that experience for the modern web. Vintage television aesthetics with generative AI creating period-accurate advertisements.",
-          "Watch your favorite content with authentic CRT effects. Scan lines, color bleeding, screen curvature, and analog artifacts. The AI analyzes your content and generates ads that would've actually aired during that era.",
-        ],
-      },
-      {
-        title: "Technical Architecture",
-        emoji: "🏗️",
-        paragraphs: [
-          "Backend runs on Java and Spring Boot, deployed to Google Cloud Run for serverless auto-scaling. Google Cloud Tasks handles asynchronous ad generation. It processes video content through generative AI to create vintage advertisements that match the era.",
-          "Frontend built with React and Vite delivers smooth 60fps CRT simulation. CSS shaders and filters recreate authentic analog TV artifacts. Phosphor glow, chromatic aberration, and frame persistence. All while maintaining responsive performance across devices.",
-        ],
-      },
-    ],
-    timeline: [{ date: "December 2025 - January 2026" }],
-    tools: [
-      "Java 21",
-      "Spring Boot 3",
-      "React 18",
-      "Vite",
-      "Google Cloud Run",
-      "Google Cloud Tasks",
-      "Generative AI",
     ],
   },
   {
@@ -415,127 +426,6 @@ const projects: Project[] = [
       "PostgreSQL",
       "Memcached",
       "WebSockets",
-    ],
-  },
-  
-
-  {
-    slug: "kaeru",
-    name: "Kaeru",
-    title: "Kaeru",
-    tagline: "AI agents that cancel subscriptions and dispute fraud charges so you don't have to",
-    period: "SFU Surge StormHacks 2025",
-    year: 2024,
-    technologies: [
-      "Next.js",
-      "AWS Amplify",
-      "TypeScript",
-      "AI Agents",
-      "Plaid API",
-      "VAPI",
-    ],
-    type: "personal",
-    featured: true,
-    description:
-      "Financial operations platform with AI agents that make phone calls and send emails to cancel subscriptions. Real-time fraud detection monitors transactions 24/7 and automatically files disputes. Built at StormHacks 2025.",
-    cta: "Learn More",
-    heroImage: "/kaeru.png",
-    gridClassName: "col-span-3 lg:col-span-2",
-    href: "https://kaeru-fawn.vercel.app/",
-    github: "https://github.com/teddymalhan/kaeru",
-    demo: "https://kaeru-fawn.vercel.app/",
-    links: [
-      {
-        label: "View Live Demo",
-        href: "https://kaeru-fawn.vercel.app/",
-        icon: "ExternalLink",
-      },
-      {
-        label: "View on GitHub",
-        href: "https://github.com/teddymalhan/kaeru",
-        icon: "Github",
-      },
-    ],
-    sections: [
-      {
-        title: "Overview",
-        emoji: "📋",
-        paragraphs: [
-          "Ever spent an hour on hold trying to cancel a gym membership? Or discovered a fraudulent charge and dreaded the dispute process? Kaeru automates these painful financial tasks using AI agents that make calls and send emails on your behalf.",
-          "Built at StormHacks 2025 with Next.js and AWS. Kaeru connects to your bank accounts via Plaid, monitors transactions in real-time for fraud, and dispatches AI agents to handle cancellations and disputes. No more dealing with customer service hell.",
-        ],
-      },
-      {
-        title: "How It Works",
-        emoji: "✨",
-        paragraphs: [
-          "Smart Cancellations: Select a subscription to cancel, and Kaeru's AI agents automatically call the company, navigate phone trees, speak to representatives, and handle the cancellation. You get notified when it's done. No hold music, no scripted retention offers.",
-          "Real-Time Fraud Detection: Kaeru monitors all transactions 24/7 using AI risk scoring. Suspicious charges trigger automatic alerts. With your approval, AI agents file disputes with your bank. Complete with documentation and follow-up calls if needed.",
-        ],
-      },
-    ],
-    timeline: [{ date: "October 2025" }],
-    tools: [
-      "Next.js 14",
-      "TypeScript",
-      "AWS Amplify",
-      "Plaid API",
-      "VAPI",
-      "TailwindCSS",
-      "AI Agents",
-    ],
-  },
-  {
-    slug: "gradgains",
-    name: "GradGains",
-    title: "GradGains",
-    tagline: "Am I spending too much on food? Financial social platform with peer comparisons",
-    period: "Google DSC Hack-The-Sem Winner (January 2024 - April 2024)",
-    year: 2024,
-    technologies: ["Drizzle ORM", "React", "Next.js"],
-    type: "hackathon",
-    featured: true,
-    description:
-      "Won Hack-The-Sem 2024 building a financial platform for students. Track spending, set budgets, and see how your expenses compare to peers (anonymized). Gamification makes budgeting engaging.",
-    cta: "View Project",
-    heroImage: "/grad-gains.png",
-    gridClassName: "col-span-3 lg:col-span-1",
-    href: "https://github.com/teddymalhan/grad-gains",
-    github: "https://github.com/teddymalhan/grad-gains",
-    demo: "#",
-    links: [
-      {
-        label: "View on GitHub",
-        href: "https://github.com/teddymalhan/grad-gains",
-        icon: "Github",
-      },
-    ],
-    sections: [
-      {
-        title: "Overview",
-        emoji: "📋",
-        paragraphs: [
-          "Students constantly wonder: Am I spending too much on food? Is my rent reasonable? Are my entertainment expenses out of control? GradGains answers these questions by combining personal finance tracking with anonymized peer comparisons.",
-          "Won Hack-The-Sem 2024 for making financial literacy engaging. Track expenses, set budgets, and see how you compare to students in similar situations. Gamification (achievements, streaks, challenges) makes budgeting fun.",
-        ],
-      },
-      {
-        title: "Why Social Context Matters",
-        emoji: "👥",
-        paragraphs: [
-          "Financial decisions are heavily influenced by social context. A student spending $400/month on food might feel anxious about it. But if their peers with similar meal plans spend $450, suddenly that number makes sense.",
-          "GradGains provides anonymized comparisons by category (food, rent, entertainment, etc.). This helps students understand their spending without compromising anyone's privacy. No judgment, just context. Gamification elements (achievements for hitting savings goals, streaks for tracking expenses) make personal finance engaging.",
-        ],
-      },
-    ],
-    timeline: [{ date: "Jan 2024 - Apr 2024" }],
-    tools: [
-      "Next.js 14",
-      "React",
-      "Drizzle ORM",
-      "PostgreSQL",
-      "TailwindCSS",
-      "NextAuth.js",
     ],
   },
 ];

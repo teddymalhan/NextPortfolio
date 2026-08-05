@@ -90,9 +90,6 @@ export function ProjectsBento() {
                         loading={project.cardImageLoading ?? "lazy"}
                         decoding="async"
                       />
-                      {project.slug === "kaeru" && (
-                        <div className="absolute inset-0 bg-black/10 pointer-events-none" />
-                      )}
                     </div>
                   }
                 >
