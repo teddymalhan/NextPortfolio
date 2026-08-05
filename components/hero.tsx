@@ -43,57 +43,65 @@ export function Hero({ isResumeVisible, resumePath }: { isResumeVisible: boolean
             </span>
           </h1>
 
-          <p className="t-stagger-line t-stagger-line--2 text-foreground/90 text-2xl md:text-3xl mb-4 font-semibold drop-shadow-md">
-            I build <InstantHighlighter
+          <div className="t-stagger-line t-stagger-line--2 mb-7 flex flex-col items-center gap-3 text-foreground/90 text-2xl font-semibold drop-shadow-md md:mb-8 md:flex-row md:justify-center md:gap-2 md:text-3xl">
+            <span>I build</span>
+            <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3">
+              <InstantHighlighter
                 highlightColor="rgb(0, 165, 41)"
                 className="text-white px-2 py-1 rounded font-bold"
-            >backend</InstantHighlighter> systems that{" "}
-            <InstantHighlighter
+              >
+                backend
+              </InstantHighlighter>
+              <span>systems that</span>
+              <InstantHighlighter
                 highlightColor="rgb(255, 32, 39)"
                 className="text-white px-2 py-1 rounded font-bold"
-              > 
+              >
                 scale
               </InstantHighlighter>
-          </p>
+            </div>
+          </div>
 
-          <p className="t-stagger-line t-stagger-line--3 text-foreground/90 text-2xl md:text-3xl mb-8 font-semibold drop-shadow-md">
-            prev. swe intern at{" "}
-            <span className="inline-flex items-center gap-1">
-              <Image
-                src="/ea-logo.jpg"
-                alt="EA logo"
-                width={20}
-                height={20}
-                className="w-5 h-5 rounded-full"
-                decoding="async"
-                unoptimized
-              />
-              <InstantHighlighter
-                highlightColor="rgb(37, 99, 235)"
-                className="text-white px-2 py-1 rounded font-bold"
-              >
-                electronic arts
-              </InstantHighlighter>
-            </span>{" "}
-            &{" "}
-            <span className="inline-flex items-center gap-1">
-              <Image
-                src="/dialpad-logo.jpg"
-                alt="Dialpad logo"
-                width={20}
-                height={20}
-                className="w-5 h-5 rounded"
-                decoding="async"
-                unoptimized
-              />
-              <InstantHighlighter
-                highlightColor="rgb(147, 51, 234)"
-                className="text-white px-2 py-1 rounded font-bold"
-              >
-                dialpad
-              </InstantHighlighter>
-            </span>
-          </p>
+          <div className="t-stagger-line t-stagger-line--3 mb-8 flex flex-col items-center gap-4 text-foreground/90 text-2xl font-semibold drop-shadow-md md:text-3xl">
+            <span>prev. swe intern at</span>
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3">
+              <span className="inline-flex items-center gap-1">
+                <Image
+                  src="/ea-logo.jpg"
+                  alt="EA logo"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 rounded-full"
+                  decoding="async"
+                  unoptimized
+                />
+                <InstantHighlighter
+                  highlightColor="rgb(37, 99, 235)"
+                  className="text-white px-2 py-1 rounded font-bold"
+                >
+                  electronic arts
+                </InstantHighlighter>
+              </span>
+              <span>&amp;</span>
+              <span className="inline-flex items-center gap-1">
+                <Image
+                  src="/dialpad-logo.jpg"
+                  alt="Dialpad logo"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 rounded"
+                  decoding="async"
+                  unoptimized
+                />
+                <InstantHighlighter
+                  highlightColor="rgb(147, 51, 234)"
+                  className="text-white px-2 py-1 rounded font-bold"
+                >
+                  dialpad
+                </InstantHighlighter>
+              </span>
+            </div>
+          </div>
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
