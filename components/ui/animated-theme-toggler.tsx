@@ -13,8 +13,8 @@ type Props = {
 };
 
 export const AnimatedThemeToggler = ({ className }: Props) => {
-  const { theme, setTheme } = useTheme();
-  const isDark = theme === "dark";
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { playToggleOn, playToggleOff } = usePortfolioSounds();
 
@@ -33,7 +33,7 @@ export const AnimatedThemeToggler = ({ className }: Props) => {
 
     const updateTheme = () => {
       flushSync(() => {
-        setTheme(theme === "dark" ? "light" : "dark");
+        setTheme(isDark ? "light" : "dark");
       });
     };
 
@@ -46,7 +46,7 @@ export const AnimatedThemeToggler = ({ className }: Props) => {
     }
 
     
-  }, [theme, setTheme, isDark, playToggleOn, playToggleOff]);
+  }, [setTheme, isDark, playToggleOn, playToggleOff]);
 
   return (
     <button

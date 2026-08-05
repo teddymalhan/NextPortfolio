@@ -60,3 +60,25 @@ test("PallasDB detail page preserves the banner aspect ratio", async ({ page }) 
   expect(imageBox.width).toBe(frameBox.width);
   expect(imageBox.height).toBe(frameBox.height);
 });
+
+test("theme toggle changes a system theme on every click", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+
+  const root = page.locator("html");
+  const toggle = page
+    .getByRole("button", { name: /Switch to (light|dark) theme/ })
+    .first();
+
+  await expect(root).toHaveClass(/dark/);
+  for (const shouldBeDark of [false, true, false, true, false]) {
+    await toggle.click();
+    if (shouldBeDark) {
+      await expect(root).toHaveClass(/dark/);
+    } else {
+      await expect(root).not.toHaveClass(/dark/);
+    }
+  }
+});
