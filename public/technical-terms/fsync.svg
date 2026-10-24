@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">fsync waits for file synchronization</title>
+  <desc id="desc">File writes buffered in the operating system are synchronized to storage by fsync. The call waits for synchronization to complete or reports an error.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#475569"/></marker></defs>
+  <rect x="24" y="54" width="178" height="126" rx="14" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+  <rect x="398" y="54" width="178" height="126" rx="14" fill="#d1fae5" stroke="#047857" stroke-width="2"/>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="113" y="95">OS buffers</text><text x="487" y="95">Storage</text><text x="300" y="91" font-family="monospace" font-size="30">fsync()</text><text x="300" y="234">Wait for completion or an error</text></g>
+  <g stroke-width="3"><path d="M48 125H177M48 147H177" stroke="#c2410c"/><path d="M421 125H550M421 147H550" stroke="#047857"/></g>
+  <path d="M216 126H382" fill="none" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+</svg>

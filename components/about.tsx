@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { m, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { Glimpse, GlimpseTrigger, GlimpseContent, GlimpseTitle, GlimpseDescription, GlimpseImage } from "@/components/kibo-ui/glimpse";
 
 export function About() {
   const prefersReducedMotion = useReducedMotion();
@@ -52,6 +53,8 @@ export function About() {
             </p>
             <p className="text-foreground">
               I like to read articles about AI &amp; infra on{" "}
+              <Glimpse>
+              <GlimpseTrigger asChild>
               <a
                 href="https://news.ycombinator.com"
                 target="_blank"
@@ -60,8 +63,19 @@ export function About() {
               >
                 Hacker News
                 <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
-              </a>{" "}
+              </a>
+              </GlimpseTrigger>
+              <GlimpseContent className="overflow-hidden p-0">
+                <GlimpseImage src="/hacker-news.svg" alt="Hacker News logo" />
+                <div className="p-4">
+                  <GlimpseTitle>Hacker News</GlimpseTitle>
+                  <GlimpseDescription className="mt-2">Technology news and discussions from the startup and engineering community.</GlimpseDescription>
+                </div>
+              </GlimpseContent>
+              </Glimpse>{" "}
               and{" "}
+              <Glimpse>
+              <GlimpseTrigger asChild>
               <a
                 href="https://x.com/teddymalhan"
                 target="_blank"
@@ -70,7 +84,16 @@ export function About() {
               >
                 X
                 <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
-              </a>{" "}, and I enjoy playing table tennis, lifting weights & geeking out over how large scale systems are built.
+              </a>
+              </GlimpseTrigger>
+              <GlimpseContent className="overflow-hidden p-0">
+                <GlimpseImage src="/x.svg" alt="X logo" />
+                <div className="p-4">
+                  <GlimpseTitle>Teddy on X</GlimpseTitle>
+                  <GlimpseDescription className="mt-2">Follow @teddymalhan for posts and conversations about technology.</GlimpseDescription>
+                </div>
+              </GlimpseContent>
+              </Glimpse>{" "}, and I enjoy playing table tennis, lifting weights & geeking out over how large scale systems are built.
             </p>
             <p className="text-foreground">
               If you&apos;re building something interesting or want to chat, feel free to reach out!

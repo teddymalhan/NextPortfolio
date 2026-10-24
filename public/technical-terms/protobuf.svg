@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">Protocol Buffers shares structured data across languages</title>
+  <desc id="desc">A shared proto schema defines the structure. Go code serializes a message into bytes, and Python code parses those bytes using the same schema.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#475569"/></marker></defs>
+  <rect x="130" y="18" width="340" height="54" rx="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/>
+  <path d="M147 75L95 117M453 75L505 117" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="6 5"/>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="300" y="54">Shared .proto schema</text>
+    <rect x="22" y="126" width="143" height="73" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/><text x="93" y="172">Go</text>
+    <rect x="229" y="126" width="142" height="73" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/><text x="300" y="172">Bytes</text>
+    <rect x="435" y="126" width="143" height="73" rx="12" fill="#d1fae5" stroke="#047857" stroke-width="2"/><text x="506" y="172">Python</text>
+    <text x="195" y="235">serialize</text><text x="405" y="235">parse</text>
+  </g>
+  <g stroke="#475569" stroke-width="3" marker-end="url(#arrow)"><path d="M169 163H218"/><path d="M375 163H424"/></g>
+</svg>

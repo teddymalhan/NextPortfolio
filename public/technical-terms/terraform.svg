@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">Terraform turns configuration into managed infrastructure</title>
+  <desc id="desc">Original illustration: human-readable configuration describes infrastructure resources. An apply arrow connects a configuration document to connected resource boxes. This is an explanatory workflow, not a claim about a particular deployment.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#475569"/></marker></defs>
+  <rect x="22" y="28" width="224" height="178" rx="12" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/>
+  <rect x="354" y="28" width="224" height="178" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+  <g fill="none" stroke="#6d28d9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M99 55H151L171 75V133H99Z"/><path d="M151 55V75H171M113 90H154M113 105H149M113 120H141"/>
+  </g>
+  <g fill="none" stroke="#0369a1" stroke-width="3" stroke-linejoin="round">
+    <path d="M466 91V107M429 107H503M429 107V119M503 107V119"/>
+    <rect x="446" y="51" width="40" height="40" rx="5" fill="#ffffff"/>
+    <rect x="409" y="119" width="40" height="30" rx="5" fill="#ffffff"/>
+    <rect x="483" y="119" width="40" height="30" rx="5" fill="#ffffff"/>
+  </g>
+  <path d="M256 130H339" fill="none" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle">
+    <text x="134" y="184">Configuration</text><text x="466" y="184">Infrastructure</text><text x="300" y="106">apply</text>
+    <text x="300" y="246" fill="#475569">Code describes resources</text>
+  </g>
+</svg>

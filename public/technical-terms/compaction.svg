@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">Compaction merges sorted files and removes obsolete versions</title>
+  <desc id="desc">An older sorted file contains A equals 1 and B equals 2. A newer file contains A equals 9 and C equals 3. The merged output keeps A equals 9, B equals 2, and C equals 3, dropping the obsolete A value when no snapshot needs it.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#475569"/></marker></defs>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="100" y="43">Older file</text><text x="289" y="43">Newer file</text><text x="503" y="43">Merged</text></g>
+  <rect x="22" y="65" width="156" height="111" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <rect x="211" y="65" width="156" height="111" rx="10" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+  <rect x="425" y="65" width="155" height="149" rx="10" fill="#d1fae5" stroke="#047857" stroke-width="2"/>
+  <g font-family="monospace" font-size="30" fill="#0f172a" text-anchor="middle"><text x="100" y="108" fill="#64748b">A : 1</text><path d="M49 97L150 111" stroke="#9a3412" stroke-width="3"/><text x="100" y="153">B : 2</text><text x="289" y="108">A : 9</text><text x="289" y="153">C : 3</text><text x="502" y="106">A : 9</text><text x="502" y="152">B : 2</text><text x="502" y="198">C : 3</text></g>
+  <path d="M100 181V197H393V140H414" fill="none" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M289 181V197" fill="none" stroke="#475569" stroke-width="3"/>
+  <text x="25" y="243" font-family="Arial, sans-serif" font-size="26" fill="#475569">Drop unneeded old versions</text>
+</svg>

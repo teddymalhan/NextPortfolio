@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">Django: an example Python-backed web request</title>
+  <desc id="desc">Original illustration of an example application flow: a web request reaches a Python backend, which accesses a database. This explains a common Django role, not the architecture of a particular project; Django can also be used without a database.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#475569"/></marker></defs>
+  <g stroke-width="2">
+    <rect x="22" y="73" width="160" height="122" rx="12" fill="#e0f2fe" stroke="#0369a1"/>
+    <rect x="220" y="73" width="160" height="122" rx="12" fill="#d1fae5" stroke="#047857"/>
+    <rect x="418" y="73" width="160" height="122" rx="12" fill="#ede9fe" stroke="#6d28d9"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle">
+    <text x="300" y="39">An example web app</text>
+    <text x="102" y="124">Web</text><text x="102" y="160">request</text>
+    <text x="300" y="124">Python</text><text x="300" y="160">backend</text>
+    <text x="498" y="144">Database</text>
+  </g>
+  <g fill="none" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"><path d="M186 134H210"/><path d="M384 134H408"/></g>
+  <text x="300" y="239" font-family="Arial, sans-serif" font-size="28" fill="#475569" text-anchor="middle">Request → code → data</text>
+</svg>

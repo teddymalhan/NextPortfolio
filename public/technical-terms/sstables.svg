@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">SSTable stores sorted keys with an index</title>
+  <desc id="desc">An immutable sorted-table file contains key ranges A to D, E to M, and N to Z. An index points a lookup for key K to the middle data block.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#0369a1"/></marker></defs>
+  <rect x="190" y="18" width="386" height="224" rx="14" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="383" y="57" font-weight="700">Immutable file</text>
+    <rect x="216" y="80" width="333" height="47" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/><text x="383" y="113">Index → data blocks</text>
+    <rect x="216" y="172" width="100" height="49" rx="6" fill="#fff" stroke="#64748b" stroke-width="2"/><text x="266" y="206">A–D</text>
+    <rect x="332" y="172" width="100" height="49" rx="6" fill="#e0f2fe" stroke="#0369a1" stroke-width="3"/><text x="382" y="206">E–M</text>
+    <rect x="448" y="172" width="100" height="49" rx="6" fill="#fff" stroke="#64748b" stroke-width="2"/><text x="498" y="206">N–Z</text>
+    <text x="83" y="93">Find K</text><text x="83" y="210" font-size="24" fill="#475569">Sorted keys</text>
+  </g>
+  <g stroke="#0369a1" stroke-width="3" marker-end="url(#arrow)" fill="none"><path d="M21 114H202"/><path d="M382 132V160"/></g>
+</svg>

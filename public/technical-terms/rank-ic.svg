@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">Rank IC compares predicted and realized investment rankings</title>
+  <desc id="desc">In an illustrative three-asset example, predicted order is A, B, C while future-return order is A, C, B. Connecting lines show which rankings agree and which switch places. This is schematic, not investment performance data.</desc>
+  <rect x="38" y="57" width="177" height="151" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+  <rect x="385" y="57" width="177" height="151" rx="12" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/>
+  <g fill="none" stroke-width="4"><path d="M217 86H383" stroke="#0f766e"/><path d="M217 133C293 133 307 181 383 181M217 181C293 181 307 133 383 133" stroke="#c2410c"/></g>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="126" y="35">Predicted rank</text><text x="473" y="35">Return rank</text><text x="300" y="245">Compare order, not magnitudes</text></g>
+  <g font-family="monospace" font-size="30" fill="#0f172a" text-anchor="middle"><text x="126" y="96">1  A</text><text x="126" y="143">2  B</text><text x="126" y="191">3  C</text><text x="473" y="96">1  A</text><text x="473" y="143">2  C</text><text x="473" y="191">3  B</text></g>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">WebSocket keeps a two-way connection open</title>
+  <desc id="desc">A browser and server share one persistent WebSocket connection. Separate arrows show messages flowing from browser to server and live updates flowing back from server to browser.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#0f766e"/></marker></defs>
+  <rect x="23" y="56" width="147" height="129" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/><path d="M23 85H170" stroke="#0369a1" stroke-width="2"/><circle cx="40" cy="71" r="4" fill="#0369a1"/><circle cx="55" cy="71" r="4" fill="#0369a1"/>
+  <rect x="430" y="56" width="147" height="129" rx="12" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/><path d="M447 151H560M447 167H560" stroke="#8b5cf6" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="96" y="132">Browser</text><text x="503" y="113">Server</text><text x="300" y="65">Messages</text><text x="300" y="190">Live updates</text><text x="300" y="242">One open, two-way connection</text></g>
+  <g stroke="#0f766e" stroke-width="4" marker-end="url(#arrow)"><path d="M183 96H417"/><path d="M417 145H183"/></g>
+</svg>

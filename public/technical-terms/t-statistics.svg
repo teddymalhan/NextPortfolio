@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">A t-statistic measures an effect relative to uncertainty</title>
+  <desc id="desc">The t-statistic equals the estimated effect relative to its null value divided by the standard error. A schematic number line places an effect three standard errors above a null effect of zero, illustrating t equals three without claiming actual research results.</desc>
+  <text x="300" y="37" font-family="Arial, sans-serif" font-size="32" text-anchor="middle" fill="#0f172a">t = effect / standard error</text>
+  <path d="M190 113V101H290V113" fill="none" stroke="#0369a1" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="240" y="88" fill="#0369a1">1 SE</text><text x="490" y="106" fill="#047857">Effect</text></g>
+  <path d="M490 118V158L480 145M490 158L500 145" fill="none" stroke="#047857" stroke-width="3"/>
+  <path d="M67 174H552M90 165V183M190 145V185M290 165V183M390 165V183M490 165V183" fill="none" stroke="#475569" stroke-width="3"/>
+  <circle cx="490" cy="174" r="8" fill="#047857"/>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle"><text x="90" y="212">−1</text><text x="190" y="212">0</text><text x="290" y="212">+1</text><text x="390" y="212">+2</text><text x="490" y="212">+3</text><text x="300" y="248" font-size="26" fill="#475569">Schematic: t = 3 (null effect = 0)</text></g>
+</svg>

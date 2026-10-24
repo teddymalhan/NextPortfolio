@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">Record changes before updating database files</title>
+  <desc id="desc">A change is appended to a write-ahead log first, then later applied to database files. Recorded changes support replay during recovery.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#475569"/></marker></defs>
+  <g font-family="Arial, sans-serif" font-size="28" fill="#0f172a" text-anchor="middle">
+    <text x="95" y="48">Change</text><text x="296" y="48">1. Log first</text><text x="500" y="48">2. Data later</text>
+    <rect x="18" y="78" width="154" height="100" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/><text x="95" y="137" font-family="monospace">x = 7</text>
+    <rect x="220" y="69" width="154" height="119" rx="8" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/><path d="M240 93H354M240 111H354" stroke="#7dd3fc" stroke-width="5"/><text x="297" y="161" font-family="monospace">+ x = 7</text>
+    <path d="M424 100C424 73 576 73 576 100V163C576 190 424 190 424 163Z" fill="#d1fae5" stroke="#047857" stroke-width="2"/><path d="M424 100C424 127 576 127 576 100" fill="none" stroke="#047857" stroke-width="2"/><text x="500" y="157" font-family="monospace">x = 7</text>
+    <text x="300" y="239">Replay recorded changes after a crash</text>
+  </g>
+  <g stroke="#475569" stroke-width="3" marker-end="url(#arrow)"><path d="M176 128H209"/><path d="M378 128H413"/></g>
+</svg>

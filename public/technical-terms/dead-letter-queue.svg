@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260" role="img" aria-labelledby="title desc">
+  <title id="title">Dead-letter queue isolates failed messages</title>
+  <desc id="desc">Messages move from a queue to a worker. Successful messages finish; messages that still fail after retries move to a separate dead-letter queue for inspection.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="#475569"/></marker></defs>
+  <g font-family="Arial, sans-serif" font-size="26" fill="#0f172a" text-anchor="middle">
+    <rect x="18" y="44" width="145" height="80" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/><text x="90" y="94">Queue</text>
+    <rect x="230" y="44" width="145" height="80" rx="12" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/><text x="302" y="94">Worker</text>
+    <rect x="445" y="44" width="137" height="80" rx="12" fill="#d1fae5" stroke="#047857" stroke-width="2"/><text x="513" y="94">Done</text>
+    <rect x="365" y="183" width="217" height="59" rx="12" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/><text x="473" y="221">Dead-letter queue</text>
+  </g>
+  <g fill="none" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"><path d="M166 84H219"/><path d="M378 84H434"/><path d="M302 127V212H353"/></g>
+  <text x="20" y="187" font-family="Arial, sans-serif" font-size="24" fill="#9a3412">Still failing</text><text x="20" y="219" font-family="Arial, sans-serif" font-size="24" fill="#9a3412">after retries</text>
+</svg>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Official Textual logo from Textualize/textual, docs/images/icons/logo light transparent.svg.
+     Original white glyph and geometry retained; dark presentation backdrop added for legibility.
+     MIT License
+     Copyright (c) 2021 Will McGugan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 1279 1033.4">
+  <rect x="-100" y="-100" width="1279" height="1033.4" rx="72" fill="#111111"/>
+  <path fill="#FFFFFF" fill-rule="evenodd" clip-rule="evenodd" d="M618,0h461l-77.4,174.1l-141.3,79.5h-96l-233,474.4L390.7,833.4H237.5l33.6-504.2H75.1L0,160.3l112.9-84.7h370.7L618,0z M470.3,102.3l-11.2,48.9H56.6l65.2-48.9H470.3L470.3,102.3z M37.1,178h415.8L308.4,806.7h-42.3l33.6-504.2H92.4L37.1,178L37.1,178z M335.8,806.7l161.9-704.3h405.7l-55.3,124.5H612.5L377.3,806.7H335.8L335.8,806.7z M920.5,75.6H538.1l87-48.9h382.5L920.5,75.6z"/>
+</svg>
