@@ -296,7 +296,7 @@ const projects: Project[] = [
     type: "hackathon",
     featured: true,
     description:
-      "Won nwHacks 2026. Versions quantitative research models, datasets, and results.",
+      "Won nwHacks 2026. Version control for quantitative research models, datasets and results.",
     cta: "View Project",
     heroImage: "/argus.png",
     gridClassName: "col-span-3 lg:col-span-1",
@@ -360,7 +360,7 @@ const projects: Project[] = [
     technologies: ["Vue.js", "Django", "Python", "Google Cloud Platform"],
     type: "internship",
     description:
-      "Cut manual call review time by 60% for more than 1,000 Dialpad agents.",
+      "Cut manual call review time by 60% thousands of agents using Dialpad.",
     cta: "Read More",
     heroImage: "/digital_scorecards.webp",
     gridClassName: "col-span-3 lg:col-span-2",
