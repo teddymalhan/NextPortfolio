@@ -121,7 +121,7 @@ const projects: Project[] = [
     name: "CloudReaper Alerts",
     title: "CloudReaper Alerts",
     tagline:
-      "AWS-native orphan resource alerts delivered to Slack through scheduled and event-driven Lambdas",
+      "Orphaned AWS resource detection with scheduled scans, event-driven checks, and Slack alerts",
     period: "2026 – Present",
     year: 2026,
     technologies: [
@@ -135,7 +135,7 @@ const projects: Project[] = [
     type: "opensource",
     featured: true,
     description:
-      "Built an AWS-native Go system that finds orphaned resources on a schedule or near real time, then delivers actionable alerts to Slack through SQS-backed Lambdas.",
+      "Finds orphaned AWS resources with Go Lambdas and sends alerts to Slack.",
     cta: "Explore CloudReaper Alerts",
     heroImage: "/cloudreaper-alerts.png",
     heroImageFit: "cover",
@@ -158,26 +158,23 @@ const projects: Project[] = [
     sections: [
       {
         title: "Overview",
-        emoji: "☁️",
         paragraphs: [
-          "CloudReaper Alerts is an AWS-native system for finding orphaned cloud resources and sending actionable findings to Slack. It runs entirely inside your AWS account without an EC2 host or long-running daemon.",
-          "A guided cross-platform CLI validates AWS and Slack access, uploads release artifacts, deploys the CloudFormation stack, triggers an initial scan, and verifies alert delivery.",
+          "CloudReaper Alerts finds orphaned AWS resources and sends alerts to Slack. It runs inside your AWS account without an EC2 host or long-running daemon.",
+          "A guided CLI runs on macOS, Linux, and Windows. It validates AWS and Slack access, uploads release artifacts, and deploys the CloudFormation stack. An initial scan checks that alerts reach Slack.",
         ],
       },
       {
-        title: "Detection and Delivery",
-        emoji: "🔔",
+        title: "Detection and delivery",
         paragraphs: [
-          "An EventBridge schedule invokes the scanner Lambda every 15 minutes. Optional CloudTrail events feed a reactor Lambda for near-real-time EC2 orphan detection.",
-          "Findings travel through an SQS queue with a dead-letter queue before the notifier Lambda posts them to Slack. Bot credentials are stored in AWS Secrets Manager.",
+          "An EventBridge schedule invokes the scanner Lambda every 15 minutes. Optional CloudTrail events invoke a reactor Lambda to detect orphaned EC2 resources in near real time.",
+          "An SQS queue passes findings to the notifier Lambda, which posts them to Slack. A dead-letter queue holds messages that fail delivery. AWS Secrets Manager stores the bot credentials.",
         ],
       },
       {
         title: "Operations",
-        emoji: "⚙️",
         paragraphs: [
-          "The Go CLI supports install, status, immediate scans, test alerts, and clean uninstallation. CloudFormation is the primary deployment target, with a Terraform and Floci path retained for local integration testing.",
-          "Automated releases publish macOS, Linux, and Windows CLI archives plus deployable Lambda packages for amd64 and arm64.",
+          "The Go CLI installs the system through CloudFormation. It also checks status, runs immediate scans, sends test alerts, and uninstalls the system. Terraform and Floci support local integration testing.",
+          "Automated releases publish CLI archives for macOS, Linux, and Windows. They also publish deployable Lambda packages for amd64 and arm64.",
         ],
       },
     ],
@@ -217,7 +214,7 @@ const projects: Project[] = [
     type: "opensource",
     featured: true,
     description:
-      "Built a distributed key-value database in Go with crash-safe WAL persistence, SSTable compaction, gRPC APIs, and Raft-backed replication.",
+      "A distributed key-value database in Go with crash-safe storage and Raft replication.",
     cta: "Explore PallasDB",
     heroImage: "/pallasdb-banner.png",
     heroImageFit: "cover",
@@ -246,26 +243,23 @@ const projects: Project[] = [
     sections: [
       {
         title: "Overview",
-        emoji: "🗄️",
         paragraphs: [
-          "PallasDB is an operator-owned, self-hosted key-value data plane for platform teams. It keeps service metadata and runtime configuration revisioned, observable, and strongly consistent across a cluster.",
-          "The database is built from first principles in Go: raw byte encoding, crash-safe persistence, sorted storage, a SQL layer, gRPC transport, and Raft-backed server mode.",
+          "PallasDB is a self-hosted key-value database for platform teams. It stores versioned service metadata and runtime configuration and includes observability. Cluster mode provides strongly consistent writes.",
+          "The Go implementation encodes data as raw bytes and persists it in sorted storage. It includes a SQL layer, a gRPC API, and a server mode that uses Raft for replication.",
         ],
       },
       {
-        title: "Storage Engine",
-        emoji: "⚙️",
+        title: "Storage engine",
         paragraphs: [
-          "Every committed write is persisted through a write-ahead log with fsync and CRC32 checksums before it is acknowledged. A sorted in-memory memtable flushes to durable SSTables, while multi-level merge iterators and compaction maintain an ordered view for range scans.",
-          "The embedded engine also provides snapshot transactions with conflict detection, plus a recursive-descent SQL parser and expression evaluator for table operations.",
+          "Before acknowledging a committed change, the engine writes it to a write-ahead log with fsync and CRC32 checksums. A sorted in-memory memtable flushes to durable SSTables. Multi-level merge iterators and compaction keep range scans ordered.",
+          "The embedded engine supports snapshot transactions with conflict detection. A recursive-descent SQL parser and expression evaluator handle table operations.",
         ],
       },
       {
-        title: "Distributed Operation",
-        emoji: "🌐",
+        title: "Distributed operation",
         paragraphs: [
-          "The gRPC API exposes Get, Put, Delete, and server-streaming Range operations over Protocol Buffers. In cluster mode, mutating requests are encoded as Raft commands and applied by the leader to the storage engine.",
-          "HashiCorp Raft provides strongly consistent replicated writes, while Serf gossip discovers cluster members. Nodes can serve reads from local FSM state, and snapshots restore state by atomically swapping the storage directory.",
+          "The gRPC API exposes Get, Put, Delete, and server-streaming Range operations over Protocol Buffers. In cluster mode, the leader applies writes to the storage engine as Raft commands.",
+          "HashiCorp Raft replicates writes with strong consistency. Serf gossip discovers cluster members. Nodes can read from their local finite state machine. To restore a snapshot, a node swaps the storage directory atomically.",
         ],
       },
     ],
@@ -289,7 +283,7 @@ const projects: Project[] = [
     slug: "argus",
     name: "Argus",
     title: "Argus",
-    tagline: "Version control for quantitative research experiments. Git, but for models and datasets",
+    tagline: "Version control for quantitative research models, datasets, and experiment results",
     period: "nwHacks 2026 Winner",
     year: 2026,
     technologies: [
@@ -302,7 +296,7 @@ const projects: Project[] = [
     type: "hackathon",
     featured: true,
     description:
-      "Won nwHacks 2026 building a version control system for quant researchers. Track model runs, datasets, and performance metrics (IC, Rank IC, t-stats) with hash-based versioning. Built with Rust and Python TUI.",
+      "Won nwHacks 2026. Versions quantitative research models, datasets, and results.",
     cta: "View Project",
     heroImage: "/argus.png",
     gridClassName: "col-span-3 lg:col-span-1",
@@ -317,42 +311,31 @@ const projects: Project[] = [
     ],
     sections: [
       {
-        title: "The Problem",
-        emoji: "💡",
+        title: "The problem",
         paragraphs: [
-          "After attending a Connor, Clark & Lunn Investment Management panel, we learned that quant researchers run hundreds of model iterations across different datasets to validate trading signals. Each run generates critical metrics (Information Coefficient, Rank IC, t-statistics) that need to be tracked and compared.",
-          "Git doesn't work for this workflow. It tracks code changes, but not the actual models, datasets, or performance metrics. Researchers were juggling spreadsheets, notebooks, and manual documentation just to remember which model and dataset combination produced which IC scores. There was no bird's-eye view of experiments.",
+          "At a Connor, Clark & Lunn Investment Management panel, we learned how quantitative researchers validate trading signals. They run hundreds of model iterations across datasets and compare each run's Information Coefficient, Rank IC, and t-statistics.",
+          "Git tracks code changes, but it doesn't record which model and dataset produced a given score. Researchers tracked those combinations in spreadsheets, notebooks, and manual notes. They had no single view of their experiments.",
         ],
       },
       {
-        title: "The Solution",
-        emoji: "🎯",
+        title: "Experiment records",
         paragraphs: [
-          "Argus brings Git-style version control to quantitative research. Every model run gets a unique hash, storing the exact model, dataset, and performance metrics (IC, Rank IC, t-stat) in an immutable record. Query past experiments, compare results, and replay any run deterministically.",
-          "Think git commit but for your trading models. Argus integrates directly into research workflows via a terminal UI. Makes experiment tracking as natural as version controlling code.",
+          "Argus gives each model run a unique hash. An immutable record stores the model, dataset, and performance metrics for that run. Researchers can query past experiments, compare results, and replay runs deterministically.",
+          "A terminal UI lets researchers commit and review runs without leaving the command line.",
         ],
       },
       {
-        title: "Technical Architecture",
-        emoji: "🏗️",
+        title: "Architecture",
         paragraphs: [
-          "Core hashing and versioning engine written in Rust for performance and immutability guarantees. Python middleware connects Rust to the Textual-based terminal UI. Provides a native command-line experience that fits into existing workflows.",
-          "Gemini AI automatically generates summaries of model runs, extracting insights from metrics. SQLite provides fast local storage while Vultr handles long-term cloud backup of models and datasets. This enables collaboration and remote experiment access.",
+          "Rust handles hashing and versioning. Python middleware connects that engine to a Textual terminal UI.",
+          "Gemini AI summarizes model runs and their metrics. SQLite stores records locally. Vultr backs up models and datasets in the cloud for collaboration and remote access.",
         ],
       },
       {
-        title: "Winning nwHacks",
-        emoji: "🏆",
+        title: "The nwHacks build",
         paragraphs: [
-          "Built the entire system in 36 hours. From learning quantitative finance concepts to shipping a working terminal UI. The biggest technical challenge was integrating Rust with Python while maintaining a smooth command-line interface.",
-          "Judges recognized Argus for solving a real problem in quantitative finance with technical depth. The hash-based versioning system provides immutable audit trails, which is critical for reproducible research in financial modeling.",
-        ],
-      },
-      {
-        title: "What's Next",
-        emoji: "🚀",
-        paragraphs: [
-          "Native Jupyter Notebook integration is next. Most quant researchers live in notebooks, so we're building a seamless plugin that lets them commit runs without leaving their research environment.",
+          "We built Argus in 36 hours at nwHacks 2026 while learning the quantitative finance concepts behind it. The hardest technical part was connecting the Rust engine to Python and the Textual terminal UI.",
+          "Argus won nwHacks 2026. Its hash-based records preserve the models, datasets, and results used in each experiment for later review.",
         ],
       },
     ],
@@ -371,13 +354,13 @@ const projects: Project[] = [
     name: "Digital Scorecards",
     title: "Digital Scorecards at Dialpad",
     tagline:
-      "Real-time performance tracking that cut manual review time by 60% for 1000+ agents",
+      "Real-time performance tracking for more than 1,000 agents, with 60% less manual review time",
     period: "January 2025 - April 2025 (Internship)",
     year: 2024,
     technologies: ["Vue.js", "Django", "Python", "Google Cloud Platform"],
     type: "internship",
     description:
-      "Built a performance tracking system at Dialpad that serves 1000+ contact center agents. Full-stack Vue.js and Django app deployed on GCP with 99.9% uptime.",
+      "Cut manual call review time by 60% for more than 1,000 Dialpad agents.",
     cta: "Read More",
     heroImage: "/digital_scorecards.webp",
     gridClassName: "col-span-3 lg:col-span-2",
@@ -394,26 +377,23 @@ const projects: Project[] = [
     sections: [
       {
         title: "Overview",
-        emoji: "📋",
         paragraphs: [
-          "Contact center managers at Dialpad needed a way to measure agent performance without spending hours manually reviewing calls. I built Digital Scorecards to automate this. Real-time performance tracking with customizable scoring criteria.",
-          "I designed and built the full-stack solution as a Software Engineering Intern. From architecting the scoring system to shipping to production. The feature now serves 1000+ agents and reduced manual review time by 60%.",
+          "I built Digital Scorecards during my software engineering internship at Dialpad. Contact center managers use it to evaluate calls against configurable scoring criteria and track agent performance in real time.",
+          "I designed the scoring system, built the application, and shipped it. The application serves more than 1,000 agents and reduced manual review time by 60%.",
         ],
       },
       {
-        title: "The Problem",
-        emoji: "📚",
+        title: "The problem",
         paragraphs: [
-          "Traditional performance reviews in contact centers were broken. Managers spent hours listening to call recordings and filling out subjective evaluation forms. Agents received delayed, inconsistent feedback. At scale, this couldn't work.",
-          "Dialpad needed an automated system that could score interactions based on configurable criteria. Give managers instant insights and give agents clear feedback on their performance.",
+          "Managers spent hours listening to call recordings and filling out subjective evaluation forms. Agents received delayed, inconsistent feedback.",
+          "Dialpad needed a system that scored interactions against configurable criteria so managers and agents could see results immediately.",
         ],
       },
       {
-        title: "Technical Implementation",
-        emoji: "⚙️",
+        title: "Implementation",
         paragraphs: [
-          "Built the frontend with Vue.js. Real-time dashboard updated via WebSocket connections. Managers can define custom evaluation criteria with weighted scoring, drill down into individual agent performance or view team-level trends.",
-          "The Django backend handles score calculation, aggregation, and automated report generation. Deployed on Google Cloud Platform with PostgreSQL and Memcached. The system handles high query volumes with sub-200ms response times and 99.9% uptime.",
+          "I built the frontend with Vue.js. WebSocket connections update the dashboard in real time. Managers can set evaluation criteria and scoring weights, review individual agents, and compare team trends.",
+          "The Django backend calculates scores, aggregates them, and generates reports. It runs on Google Cloud Platform with PostgreSQL and Memcached. Response times stay below 200 milliseconds under high query volumes, and uptime is 99.9%.",
         ],
       },
     ],
