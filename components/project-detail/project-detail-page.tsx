@@ -9,6 +9,7 @@ import { ProjectSidebar } from "./project-sidebar";
 import { ContentSection } from "./content-section";
 import { TableOfContents } from "./table-of-contents";
 import { usePageTransition } from "@/components/page-transition";
+import { TermImagePreloader } from "./term-image-preloader";
 
 // Lazy load heavier components
 const DemoSection = lazy(() =>
@@ -64,11 +65,13 @@ export function ProjectDetailPage({ project }: ProjectDetailPageProps) {
           <TableOfContents sections={project.sections} variant="desktop" />
 
           {/* Main Content */}
-          <main>
-            {project.sections.map((section, i) => (
-              <ContentSection key={section.title} section={section} index={i} />
-            ))}
-          </main>
+          <TermImagePreloader sections={project.sections}>
+            <main>
+              {project.sections.map((section, i) => (
+                <ContentSection key={section.title} section={section} index={i} />
+              ))}
+            </main>
+          </TermImagePreloader>
 
           {/* Project Info Sidebar */}
           <ProjectSidebar project={project} />

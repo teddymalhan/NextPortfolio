@@ -154,41 +154,93 @@ test("explanations remain usable in both themes with reduced motion", async ({ p
   expect(darkColor).not.toBe(lightColor);
 });
 
-test("term images are requested only for opened cards on the active project", async ({ page }) => {
-  const requestedImages: string[] = [];
+test("project images warm in the background without loading unrelated images", async ({ page }) => {
+  const requestedImages = new Set<string>();
   page.on("request", (request) => {
     const path = new URL(request.url()).pathname;
-    if (path.startsWith("/technical-terms/")) requestedImages.push(path);
+    if (path.startsWith("/technical-terms/")) requestedImages.add(path);
   });
 
   await page.goto("/");
   await expect(page.locator('a[href="/projects/cloudreaper-alerts"]')).toBeVisible();
-  expect(requestedImages).toEqual([]);
+  expect([...requestedImages]).toEqual([]);
 
-  await page.goto("/projects/cloudreaper-alerts");
-  const eventBridge = page.getByRole("button", { name: "EventBridge", exact: true });
-  await eventBridge.scrollIntoViewIfNeeded();
-  expect(requestedImages).toEqual([]);
-  await eventBridge.focus();
-  const eventBridgeImage = page.getByRole("tooltip", { name: "Amazon EventBridge" }).getByRole("img");
-  await expect.poll(() => eventBridgeImage.evaluate((element: HTMLImageElement) =>
-    element.complete && element.naturalWidth > 0
-  )).toBe(true);
-  expect(requestedImages).toEqual(["/technical-terms/eventbridge.svg"]);
+  const expectedImages = new Set<string>();
+  for (const section of getProjectBySlug("cloudreaper-alerts")!.sections) {
+    const seen = new Set<string>();
+    for (const text of [...section.paragraphs, ...(section.bullets ?? [])]) {
+      for (const part of explainTechnicalTerms(text, seen)) {
+        if (typeof part !== "string") expectedImages.add(part.term.image.src);
+      }
+    }
+  }
 
-  await page.goto("/projects/pallasdb");
-  const sstables = page.getByRole("button", { name: "SSTables", exact: true });
-  await sstables.scrollIntoViewIfNeeded();
-  expect(requestedImages).toEqual(["/technical-terms/eventbridge.svg"]);
-  await sstables.focus();
-  const sstablesImage = page.getByRole("tooltip", { name: "SSTables", exact: true }).getByRole("img");
-  await expect.poll(() => sstablesImage.evaluate((element: HTMLImageElement) =>
-    element.complete && element.naturalWidth > 0
-  )).toBe(true);
-  expect(requestedImages).toEqual([
-    "/technical-terms/eventbridge.svg",
-    "/technical-terms/sstables.svg",
-  ]);
+  await page.locator('a[href="/projects/cloudreaper-alerts"]').click();
+  await expect(page).toHaveURL(/\/projects\/cloudreaper-alerts$/);
+  await expect(page.getByRole("heading", { name: "CloudReaper Alerts", exact: true })).toBeVisible();
+  await expect.poll(() => [...requestedImages].sort()).toEqual([...expectedImages].sort());
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
+});
+
+for (const interaction of ["hover", "focus"] as const) {
+  test(`${interaction} bypasses a stalled background image without blocking the description`, async ({ page }) => {
+    const requestedImages: string[] = [];
+    const { promise: stalled, resolve: releaseBackground } = Promise.withResolvers<void>();
+    await page.route("**/technical-terms/**", async (route) => {
+      const path = new URL(route.request().url()).pathname;
+      requestedImages.push(path);
+      if (path === "/technical-terms/ec2.svg") await stalled;
+      await route.continue();
+    });
+
+    try {
+      await page.goto("/projects/cloudreaper-alerts", { waitUntil: "load" });
+      await expect(page.getByRole("heading", { name: "CloudReaper Alerts", exact: true })).toBeVisible();
+      await expect.poll(() => requestedImages).toEqual(["/technical-terms/ec2.svg"]);
+
+      const trigger = page.getByRole("button", { name: "SQS", exact: true });
+      await trigger[interaction]();
+      const card = page.getByRole("tooltip", { name: "Amazon SQS", exact: true });
+      await expect(card).toBeVisible();
+      await expect(card).toContainText("buffers CloudReaper's findings");
+      await expect.poll(() => card.getByRole("img").evaluate((image: HTMLImageElement) =>
+        image.complete && image.naturalWidth > 0
+      )).toBe(true);
+      expect([...new Set(requestedImages)]).toEqual([
+        "/technical-terms/ec2.svg",
+        "/technical-terms/sqs.svg",
+      ]);
+    } finally {
+      releaseBackground();
+    }
+  });
+}
+
+test("leaving a project stops its queued image downloads", async ({ page }) => {
+  const requestedImages: string[] = [];
+  const { promise: stalled, resolve: releaseBackground } = Promise.withResolvers<void>();
+  await page.route("**/technical-terms/**", async (route) => {
+    const path = new URL(route.request().url()).pathname;
+    requestedImages.push(path);
+    if (path === "/technical-terms/ec2.svg") await stalled;
+    await route.continue();
+  });
+
+  try {
+    await page.goto("/projects/cloudreaper-alerts");
+    await expect.poll(() => requestedImages).toEqual(["/technical-terms/ec2.svg"]);
+    await page.getByRole("button", { name: "Back to home" }).click();
+    await expect(page).toHaveURL("/");
+    releaseBackground();
+    await page.locator('a[href="/projects/pallasdb"]').click();
+    await expect(page).toHaveURL(/\/projects\/pallasdb$/);
+    await expect.poll(() => requestedImages.includes("/technical-terms/serf.svg")).toBe(true);
+    expect(requestedImages.filter((path) =>
+      ["/technical-terms/cli.svg", "/technical-terms/cloudformation.svg", "/technical-terms/eventbridge.svg"].includes(path)
+    )).toEqual([]);
+  } finally {
+    releaseBackground();
+  }
 });
 
 test.describe("term image coverage", () => {

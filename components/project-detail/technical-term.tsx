@@ -10,6 +10,7 @@ import {
   GlimpseTrigger,
 } from "@/components/kibo-ui/glimpse";
 import type { TechnicalTerm as TechnicalTermDefinition } from "@/lib/technical-terms";
+import { usePrioritizeTermImage } from "./term-image-preloader";
 
 export function TechnicalTerm({
   children,
@@ -20,6 +21,7 @@ export function TechnicalTerm({
 }) {
   const [open, setOpen] = useState(false);
   const id = useId();
+  const prioritizeImage = usePrioritizeTermImage();
 
   return (
     <Glimpse open={open} onOpenChange={setOpen}>
@@ -29,9 +31,12 @@ export function TechnicalTerm({
           aria-expanded={open}
           aria-controls={open ? id : undefined}
           aria-describedby={open ? `${id}-description` : undefined}
+          onPointerEnter={() => prioritizeImage(term.image.src)}
+          onFocus={() => prioritizeImage(term.image.src)}
           onClick={() => setOpen(true)}
           onTouchStart={(event) => {
             event.preventDefault();
+            prioritizeImage(term.image.src);
             setOpen(true);
           }}
           className="cursor-pointer rounded-sm text-inherit underline decoration-primary/50 decoration-dotted underline-offset-4 transition-colors duration-150 hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
@@ -45,7 +50,12 @@ export function TechnicalTerm({
         aria-labelledby={`${id}-title`}
         className="overflow-hidden p-0"
       >
-        <GlimpseImage src={term.image.src} alt={term.image.alt} />
+        <GlimpseImage
+          src={term.image.src}
+          alt={term.image.alt}
+          loading="eager"
+          fetchPriority="high"
+        />
         <div className="p-4">
           <GlimpseTitle id={`${id}-title`}>{term.title}</GlimpseTitle>
           <GlimpseDescription id={`${id}-description`} className="mt-2">

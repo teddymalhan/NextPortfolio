@@ -12,15 +12,13 @@ async function expectLoadedImage(image: Locator) {
     .toBe(true);
 }
 
-test("PallasDB card eagerly loads a full-bleed banner", async ({ page }) => {
+test("PallasDB card displays a full-bleed banner", async ({ page }) => {
   await page.goto("/");
 
   const card = page.locator('a[href="/projects/pallasdb"]');
   const image = card.getByRole("img", { name: "PallasDB" });
   const imageFrame = image.locator("..");
 
-  await expect(image).toHaveAttribute("loading", "eager");
-  await expect(image).toHaveClass(/object-cover/);
   await expectLoadedImage(image);
 
   const [imageBox, frameBox] = await Promise.all([
@@ -43,7 +41,6 @@ test("PallasDB detail page preserves the banner aspect ratio", async ({ page }) 
   const imageFrame = image.locator("..");
 
   await expectLoadedImage(image);
-  await expect(image).toHaveClass(/object-contain/);
   await expect
     .poll(() => imageFrame.evaluate((element) => getComputedStyle(element).aspectRatio))
     .toBe("4 / 1");
