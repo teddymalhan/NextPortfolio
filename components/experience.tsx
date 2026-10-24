@@ -18,7 +18,7 @@ const experiences: ExperienceItem[] = [
   {
     company: "Electronic Arts",
     role: "Software Engineer Intern",
-    period: "May 2026 - Aug 2026",
+    period: "May 2026 - Present",
     location: "Vancouver, BC",
     tags: ["⎈ PI&E Game Server Hosting"],
     logo: "/ea-logo-full.jpg",
