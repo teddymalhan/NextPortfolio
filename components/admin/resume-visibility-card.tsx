@@ -4,15 +4,14 @@ import { m, useReducedMotion } from "framer-motion";
 import { Loader2, EyeOff, Eye as EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { AnimatedText } from "@/components/ui/transition-primitives";
-import { useResumeManagerStore } from "@/stores";
+import { AnimatedText } from "@/components/ui/animated-value";
+import { useResumeManagerStore } from "./resume-manager-store";
 
 const REDUCED_MOTION_VARIANTS = {} as const;
 
 export function ResumeVisibilityCard() {
   const isResumeVisible = useResumeManagerStore((state) => state.isResumeVisible);
   const togglingVisibility = useResumeManagerStore((state) => state.togglingVisibility);
-  const cooldown = useResumeManagerStore((state) => state.cooldown);
   const toggleVisibility = useResumeManagerStore((state) => state.toggleVisibility);
   const prefersReducedMotion = useReducedMotion();
 
@@ -30,12 +29,12 @@ export function ResumeVisibilityCard() {
               <p className="text-sm text-muted-foreground">
                 {isResumeVisible
                   ? "Resume is currently visible on the website. Visitors can view and download it."
-                  : "Resume is currently hidden. No one can access it on the website."}
+                  : "Resume is currently hidden from the website. Previously shared public file links still work."}
               </p>
             </div>
             <Button
               onClick={toggleVisibility}
-              disabled={togglingVisibility || cooldown}
+              disabled={togglingVisibility}
               variant={isResumeVisible ? "destructive" : "default"}
               className="shrink-0"
             >

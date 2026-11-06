@@ -9,18 +9,17 @@ const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST
 
 function PostHogPageViewInner() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const query = useSearchParams()?.toString()
   const posthog = usePostHog()
 
   useEffect(() => {
     if (!pathname || !posthog) return
 
     let url = globalThis.window.origin + pathname
-    if (searchParams?.toString()) {
-      url = url + `?${searchParams.toString()}`
+    if (query) {
+      url = url + `?${query}`
     }
 
-    // Capture pageview with extended properties
     posthog.capture("$pageview", {
       $current_url: url,
       $referrer: document.referrer,
@@ -36,7 +35,6 @@ function PostHogPageViewInner() {
       connection_type: (navigator as Navigator & { connection?: { effectiveType?: string } }).connection?.effectiveType || "unknown",
     })
 
-    // Track scroll depth
     let maxScrollDepth = 0
     const handleScroll = () => {
       const scrollTop = window.scrollY
@@ -47,9 +45,11 @@ function PostHogPageViewInner() {
       }
     }
 
-    // Track time on page and scroll depth on leave
     const startTime = Date.now()
-    const handleBeforeUnload = () => {
+    let departed = false
+    const finishEngagement = () => {
+      if (departed) return
+      departed = true
       const timeOnPage = Math.round((Date.now() - startTime) / 1000)
       posthog.capture("page_engagement", {
         pathname,
@@ -59,13 +59,14 @@ function PostHogPageViewInner() {
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true })
-    window.addEventListener("beforeunload", handleBeforeUnload)
+    window.addEventListener("beforeunload", finishEngagement)
 
     return () => {
+      finishEngagement()
       window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("beforeunload", handleBeforeUnload)
+      window.removeEventListener("beforeunload", finishEngagement)
     }
-  }, [pathname, searchParams, posthog])
+  }, [pathname, query, posthog])
 
   return null
 }
@@ -88,24 +89,21 @@ export function PHProvider({ children }: Readonly<{ children: React.ReactNode }>
       apiKey={posthogKey}
       options={{
         api_host: posthogHost,
-        person_profiles: "always", // Track all visitors, not just identified ones
-        capture_pageview: false, // We handle this manually in PostHogPageView
-        capture_pageleave: true, // Track when users leave pages
+        person_profiles: "always",
+        capture_pageview: false, // Route views are captured by PostHogPageView.
+        capture_pageleave: true,
 
-        // Autocapture everything
         autocapture: {
           dom_event_allowlist: ["click", "change", "submit"],
           url_allowlist: [".*"],
           element_allowlist: ["a", "button", "form", "input", "select", "textarea", "label"],
           css_selector_allowlist: ["[ph-autocapture]", "[data-track]", "[class*='btn']", "[class*='button']", "[class*='link']"],
-          capture_copied_text: true, // Track when users copy text
+          capture_copied_text: true,
         },
 
-        // Dead clicks and rage clicks
-        capture_dead_clicks: true, // Track clicks that don't do anything
-        rageclick: true, // Track rapid frustration clicks
+        capture_dead_clicks: true,
+        rageclick: true,
 
-        // Session recording - comprehensive
         session_recording: {
           recordCrossOriginIframes: true,
           maskAllInputs: false,
@@ -113,10 +111,8 @@ export function PHProvider({ children }: Readonly<{ children: React.ReactNode }>
           collectFonts: true,
         },
 
-        // Performance and vitals
-        capture_performance: true, // Web vitals, resource timing, etc.
+        capture_performance: true,
 
-        // Heatmaps and scroll tracking
         enable_heatmaps: true,
 
         disable_session_recording: false,

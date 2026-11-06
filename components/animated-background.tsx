@@ -32,7 +32,6 @@ export function AnimatedBackground() {
         }}
       />
 
-      {/* Gradient meshes - warm amber tones */}
       <div className="absolute inset-0">
         {/* Light mode gradients - GitHub Light blue tones */}
         {resolvedTheme === "light" && (

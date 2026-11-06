@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Mail, Github, Linkedin } from "lucide-react";
 import { m, useReducedMotion } from "framer-motion";
 import { usePortfolioSounds } from "@/components/sound-effects";
+import { site } from "@/lib/site";
 
 export default function Footer({
   isResumeVisible,
@@ -17,32 +18,32 @@ export default function Footer({
 
   return (
     <m.footer
+      id="contact"
       className="relative mx-auto w-full max-w-6xl px-6 py-10 md:py-14 will-change-[transform,opacity]"
       initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
       whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
     >
-      {/* Ambient glow (match About section) */}
       <div className="pointer-events-none absolute -inset-x-12 -top-8 -bottom-8 opacity-60">
         <div className="mx-auto h-full max-w-6xl rounded-[28px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent blur-2xl" />
       </div>
       <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div>
           <h3 className="font-sans text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
-            Teddy Malhan
+            {site.name}
           </h3>
           <Link
-            href="mailto:teddymalhan@gmail.com"
+            href={`mailto:${site.email}`}
             onClick={playSend}
             className="mt-2 block text-base md:text-lg text-foreground/90 hover:text-foreground underline decoration-border/50 hover:decoration-primary/50 underline-offset-4"
           >
-            teddymalhan@gmail.com
+            {site.email}
           </Link>
 
           <div className="mt-5 flex gap-2">
             <Link
-              href="mailto:teddymalhan@gmail.com"
+              href={`mailto:${site.email}`}
               aria-label="Email"
               onClick={playSend}
               className="fill rounded-md p-2"
@@ -50,7 +51,7 @@ export default function Footer({
               <Mail className="w-5 h-5" />
             </Link>
             <Link
-              href="https://github.com/teddymalhan"
+              href={site.links.github}
               target="_blank"
               rel="noreferrer noopener"
               aria-label="GitHub"
@@ -60,7 +61,7 @@ export default function Footer({
               <Github className="w-5 h-5" />
             </Link>
             <Link
-              href="https://www.linkedin.com/in/teddymalhan/"
+              href={site.links.linkedin}
               target="_blank"
               rel="noreferrer noopener"
               aria-label="LinkedIn"
@@ -100,7 +101,7 @@ export default function Footer({
           <div className="flex flex-col gap-2">
             <p className="font-medium text-foreground">Social</p>
             <Link
-              href="https://github.com/teddymalhan"
+              href={site.links.github}
               target="_blank"
               rel="noreferrer noopener"
               className="text-muted-foreground hover:text-foreground"
@@ -109,7 +110,7 @@ export default function Footer({
               GitHub
             </Link>
             <Link
-              href="https://www.linkedin.com/in/teddymalhan/"
+              href={site.links.linkedin}
               target="_blank"
               rel="noreferrer noopener"
               onClick={playClick}
@@ -118,7 +119,7 @@ export default function Footer({
               LinkedIn
             </Link>
             <Link
-              href="mailto:teddymalhan@gmail.com"
+              href={`mailto:${site.email}`}
               className="text-muted-foreground hover:text-foreground"
               onClick={playSend}
             >
@@ -146,7 +147,7 @@ export default function Footer({
               About
             </Link>
             <Link
-              href="https://cal.com/teddymalhan"
+              href={site.links.booking}
               target="_blank"
               rel="noreferrer noopener"
               onClick={playClick}

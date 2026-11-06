@@ -1,31 +1,21 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
-import type { ContentSection } from "@/lib/projects";
-import { explainTechnicalTerms } from "@/lib/technical-terms";
 
-const TermImageContext = createContext<(src: string) => void>(() => {});
+const TermImageContext = createContext<((src: string) => void) | null>(null);
 
 export function TermImagePreloader({
-  sections,
+  sources,
   children,
 }: {
-  sections: ContentSection[];
+  sources: string[];
   children: ReactNode;
 }) {
   const prioritizeRef = useRef<(src: string) => void>(() => {});
   const prioritize = useCallback((src: string) => prioritizeRef.current(src), []);
 
   useEffect(() => {
-    const queued = new Set<string>();
-    for (const section of sections) {
-      const seen = new Set<string>();
-      for (const text of [...section.paragraphs, ...(section.bullets ?? [])]) {
-        for (const part of explainTechnicalTerms(text, seen)) {
-          if (typeof part !== "string") queued.add(part.term.image.src);
-        }
-      }
-    }
+    const queued = new Set(sources);
 
     const images = new Map<string, HTMLImageElement>();
     let disposed = false;
@@ -96,11 +86,13 @@ export function TermImagePreloader({
         if (!image.complete) image.removeAttribute("src");
       }
     };
-  }, [sections]);
+  }, [sources]);
 
   return <TermImageContext.Provider value={prioritize}>{children}</TermImageContext.Provider>;
 }
 
 export function usePrioritizeTermImage() {
-  return useContext(TermImageContext);
+  const prioritize = useContext(TermImageContext);
+  if (!prioritize) throw new Error("Technical terms require TermImagePreloader");
+  return prioritize;
 }

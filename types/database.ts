@@ -1,4 +1,3 @@
-// Database model types matching the schema
 export interface ResumeRow {
   id: number
   filename: string
@@ -16,6 +15,6 @@ export interface SettingsRow {
   id: number
   key: string
   value: string
-  updated_at: Date | string
+  updated_at: Date | string | null
 }
 

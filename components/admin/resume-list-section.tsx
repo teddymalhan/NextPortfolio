@@ -21,17 +21,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ClearableInput, SuccessCheck, Tooltip } from "@/components/ui/transition-primitives";
-import { useResumeManagerStore } from "@/stores";
+import { ClearableInput } from "@/components/ui/clearable-input";
+import { SuccessCheck } from "@/components/ui/input-feedback";
+import { Tooltip } from "@/components/ui/tooltip";
+import { useResumeManagerStore } from "./resume-manager-store";
+import { formatFileSize } from "./resume-format";
 
 const REDUCED_MOTION_VARIANTS = {} as const;
-
-function formatFileSize(bytes?: number | null) {
-  if (!bytes) return "Unknown size";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 export function ResumeListSection() {
   const resumes = useResumeManagerStore((state) => state.resumes);
@@ -40,15 +36,14 @@ export function ResumeListSection() {
   const filterStatus = useResumeManagerStore((state) => state.filterStatus);
   const sortBy = useResumeManagerStore((state) => state.sortBy);
   const selectedResumes = useResumeManagerStore((state) => state.selectedResumes);
+  const pending = useResumeManagerStore((state) => state.pending);
   const {
     setActive,
     deleteResume,
     copyResumeLink,
     toggleResumeSelection,
     bulkDelete,
-    openEditNotes,
-    openRename,
-    setPreviewResume,
+    openDialog,
     setSearchQuery,
     setFilterStatus,
     setSortBy,
@@ -58,9 +53,11 @@ export function ResumeListSection() {
   const [copiedResumeId, setCopiedResumeId] = useState<number | null>(null);
 
   const handleCopyResumeLink = async (resume: (typeof resumes)[number]) => {
-    await copyResumeLink(resume);
-    setCopiedResumeId(resume.id);
-    window.setTimeout(() => setCopiedResumeId((current) => (current === resume.id ? null : current)), 1800);
+    const copied = await copyResumeLink(resume);
+    if (copied) {
+      setCopiedResumeId(resume.id);
+      window.setTimeout(() => setCopiedResumeId((current) => (current === resume.id ? null : current)), 1800);
+    }
   };
 
   const filteredAndSortedResumes = useMemo(() => {
@@ -95,8 +92,10 @@ export function ResumeListSection() {
     });
   }, [resumes, searchQuery, filterStatus, sortBy]);
 
+  const visibleDeletableIds = filteredAndSortedResumes.filter((resume) => !resume.isActive).map((resume) => resume.id);
+  const allVisibleSelected = visibleDeletableIds.length > 0 && visibleDeletableIds.every((id) => selectedResumes.has(id));
   const handleToggleSelectAll = () => {
-    toggleSelectAll(filteredAndSortedResumes.map((r) => r.id));
+    toggleSelectAll(visibleDeletableIds);
   };
 
   return (
@@ -111,9 +110,9 @@ export function ResumeListSection() {
             <div className="flex items-center gap-4">
               <CardTitle className="text-xl">Resume Versions</CardTitle>
               {selectedResumes.size > 0 && (
-                <Button variant="destructive" size="sm" onClick={bulkDelete} className="relative gap-2">
+                <Button variant="destructive" size="sm" onClick={bulkDelete} disabled={!!pending} className="relative gap-2">
                   <Trash2 className="w-4 h-4" />
-                  Delete Selected
+                  {pending?.kind === "bulk-delete" ? "Deleting..." : "Delete Selected"}
                   <span className="t-badge" data-open="true" aria-hidden="true">
                     <span className="t-badge-dot min-w-5 rounded-full bg-background px-1.5 py-0.5 text-center text-[10px] font-bold text-destructive shadow">
                       {selectedResumes.size}
@@ -188,15 +187,14 @@ export function ResumeListSection() {
               <div className="flex items-center gap-2 pb-3 border-b border-border">
                 <input
                   type="checkbox"
-                  checked={
-                    selectedResumes.size === filteredAndSortedResumes.length &&
-                    filteredAndSortedResumes.length > 0
-                  }
+                  checked={allVisibleSelected}
+                  disabled={!!pending || visibleDeletableIds.length === 0}
+                  aria-label="Select all visible inactive resumes"
                   onChange={handleToggleSelectAll}
                   className="w-4 h-4 rounded border-input cursor-pointer accent-primary"
                 />
                 <span className="text-sm text-muted-foreground">
-                  Select all ({filteredAndSortedResumes.length})
+                  Select all ({visibleDeletableIds.length})
                 </span>
               </div>
               {filteredAndSortedResumes.map((resume, index) => (
@@ -214,6 +212,8 @@ export function ResumeListSection() {
                       type="checkbox"
                       checked={selectedResumes.has(resume.id)}
                       onChange={() => toggleResumeSelection(resume.id)}
+                      disabled={resume.isActive || !!pending}
+                      aria-label={`Select ${resume.filename}`}
                       className="w-4 h-4 rounded border-input cursor-pointer accent-primary"
                       onClick={(e) => e.stopPropagation()}
                     />
@@ -225,7 +225,8 @@ export function ResumeListSection() {
                         <p className="font-medium truncate">{resume.filename}</p>
                         <Tooltip label="Rename resume">
                           <button
-                            onClick={() => openRename(resume)}
+                            onClick={() => openDialog("rename", resume.id)}
+                            disabled={!!pending}
                             className="shrink-0 p-1 hover:bg-accent rounded-lg transition-colors"
                             aria-label="Rename resume"
                           >
@@ -293,7 +294,8 @@ export function ResumeListSection() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => openEditNotes(resume)}
+                        onClick={() => openDialog("notes", resume.id)}
+                        disabled={!!pending}
                         aria-label="Edit notes"
                         className="hover:bg-accent"
                       >
@@ -304,7 +306,8 @@ export function ResumeListSection() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setPreviewResume(resume)}
+                        onClick={() => openDialog("preview", resume.id)}
+                        disabled={!!pending}
                         aria-label="Preview resume"
                         className="hover:bg-accent"
                       >
@@ -312,26 +315,28 @@ export function ResumeListSection() {
                       </Button>
                     </Tooltip>
                     <Tooltip label="Download resume">
-                      <a href={resume.path} target="_blank" rel="noopener noreferrer">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          aria-label="Download resume"
-                          className="hover:bg-accent"
-                        >
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        aria-label="Download resume"
+                        className="hover:bg-accent"
+                      >
+                        <a href={resume.path} target="_blank" rel="noopener noreferrer">
                           <Download className="w-4 h-4" />
-                        </Button>
-                      </a>
+                        </a>
+                      </Button>
                     </Tooltip>
                     {!resume.isActive && (
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setActive(resume.id)}
+                        disabled={!!pending}
                         className="gap-1"
                       >
                         <Check className="w-4 h-4" />
-                        Set Active
+                        {pending?.kind === "activate" && pending.id === resume.id ? "Activating..." : "Set Active"}
                       </Button>
                     )}
                     {!resume.isActive && (
@@ -339,7 +344,8 @@ export function ResumeListSection() {
                         <Button
                           variant="destructive"
                           size="sm"
-                          onClick={() => deleteResume(resume.id, resume.filename)}
+                          onClick={() => deleteResume(resume.id)}
+                          disabled={!!pending}
                           aria-label="Delete resume"
                         >
                           <Trash2 className="w-4 h-4" />

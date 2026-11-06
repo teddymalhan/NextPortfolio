@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { m, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { Glimpse, GlimpseTrigger, GlimpseContent, GlimpseTitle, GlimpseDescription, GlimpseImage } from "@/components/kibo-ui/glimpse";
+import { Glimpse, GlimpsePreview } from "@/components/kibo-ui/glimpse";
+import { HoverCardTrigger } from "@/components/ui/hover-card";
+import { site } from "@/lib/site";
 
 export function About() {
   const prefersReducedMotion = useReducedMotion();
@@ -18,13 +20,11 @@ export function About() {
       transition={{ duration: 0.5 }}
     >
       <div className="relative mx-auto max-w-6xl px-6">
-        {/* Ambient glow (no card) */}
         <div className="pointer-events-none absolute -inset-x-12 -top-8 -bottom-8 opacity-60">
           <div className="mx-auto h-full max-w-3xl rounded-[28px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent blur-2xl" />
         </div>
 
         <div className="relative z-10 text-center">
-          {/* Avatar with gradient ring */}
           <div
             className="mx-auto mb-8 size-36 rounded-full p-[2px] md:mb-10 md:size-44"
             style={{
@@ -34,7 +34,7 @@ export function About() {
           >
             <div className="size-full overflow-hidden rounded-full bg-background ring-1 ring-border">
               <Image
-                src="/ted-aboutme.jpg"
+                src={site.portrait}
                 alt="Portrait of Ted"
                 width={176}
                 height={176}
@@ -46,7 +46,6 @@ export function About() {
             </div>
           </div>
 
-          {/* Copy */}
           <div className="mx-auto max-w-prose space-y-5 text-left text-foreground text-lg md:text-xl leading-relaxed md:space-y-6">
             <p className="text-foreground">
               Hi, I&apos;m Teddy and I&apos;m a Computer Science student at Simon Fraser Unversity, focused on building scalable and reliable infrastructure to serve millions of users.
@@ -54,7 +53,7 @@ export function About() {
             <p className="text-foreground">
               I like to read articles about AI &amp; infra on{" "}
               <Glimpse>
-              <GlimpseTrigger asChild>
+              <HoverCardTrigger asChild>
               <a
                 href="https://news.ycombinator.com"
                 target="_blank"
@@ -64,18 +63,16 @@ export function About() {
                 Hacker News
                 <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
               </a>
-              </GlimpseTrigger>
-              <GlimpseContent className="overflow-hidden p-0">
-                <GlimpseImage src="/hacker-news.svg" alt="Hacker News logo" />
-                <div className="p-4">
-                  <GlimpseTitle>Hacker News</GlimpseTitle>
-                  <GlimpseDescription className="mt-2">Technology news and discussions from the startup and engineering community.</GlimpseDescription>
-                </div>
-              </GlimpseContent>
+              </HoverCardTrigger>
+              <GlimpsePreview
+                title="Hacker News"
+                description="Technology news and discussions from the startup and engineering community."
+                image={{ src: "/hacker-news.svg", alt: "Hacker News logo" }}
+              />
               </Glimpse>{" "}
               and{" "}
               <Glimpse>
-              <GlimpseTrigger asChild>
+              <HoverCardTrigger asChild>
               <a
                 href="https://x.com/teddymalhan"
                 target="_blank"
@@ -85,14 +82,12 @@ export function About() {
                 X
                 <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
               </a>
-              </GlimpseTrigger>
-              <GlimpseContent className="overflow-hidden p-0">
-                <GlimpseImage src="/x.svg" alt="X logo" />
-                <div className="p-4">
-                  <GlimpseTitle>Teddy on X</GlimpseTitle>
-                  <GlimpseDescription className="mt-2">Follow @teddymalhan for posts and conversations about technology.</GlimpseDescription>
-                </div>
-              </GlimpseContent>
+              </HoverCardTrigger>
+              <GlimpsePreview
+                title="Teddy on X"
+                description="Follow @teddymalhan for posts and conversations about technology."
+                image={{ src: "/x.svg", alt: "X logo" }}
+              />
               </Glimpse>{" "}, and I enjoy playing table tennis, lifting weights & geeking out over how large scale systems are built.
             </p>
             <p className="text-foreground">

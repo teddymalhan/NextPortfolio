@@ -1,27 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { PHProvider } from "./posthog-provider"
+import { lazy, Suspense, useEffect, useState } from "react"
 
-/**
- * Deferred Analytics Component
- * Loads Vercel Analytics and SpeedInsights after user interaction or idle time
- * This improves initial page load performance by deferring non-critical scripts
- */
+const Analytics = lazy(() => import("./analytics"))
 export default function DeferredAnalytics() {
   const [shouldLoad, setShouldLoad] = useState(false)
 
   useEffect(() => {
-    // Load analytics after user interaction or after idle time
     const loadAnalytics = () => {
       setShouldLoad(true)
-      // Clean up event listeners once loaded
       cleanup()
     }
 
-    // Interaction events that trigger loading
     const events = ["scroll", "mousemove", "touchstart", "keydown", "click"]
     
     const cleanup = () => {
@@ -30,12 +20,10 @@ export default function DeferredAnalytics() {
       })
     }
 
-    // Add event listeners for user interaction
     events.forEach((event) => {
       window.addEventListener(event, loadAnalytics, { capture: true, once: true, passive: true })
     })
 
-    // Also load after idle time (requestIdleCallback) or timeout fallback
     let idleCallbackId: number | undefined
     let timeoutId: NodeJS.Timeout | undefined
 
@@ -62,10 +50,9 @@ export default function DeferredAnalytics() {
   }
 
   return (
-    <PHProvider>
+    <Suspense fallback={null}>
       <Analytics />
-      <SpeedInsights />
-    </PHProvider>
+    </Suspense>
   )
 }
 

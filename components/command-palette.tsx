@@ -1,10 +1,6 @@
 "use client";
 
 import {
-  Home,
-  Hammer,
-  Briefcase,
-  Mail,
   FileText,
   Github,
   Linkedin,
@@ -22,13 +18,15 @@ import {
 } from "@/components/ui/command";
 import { useRouter } from "next/navigation";
 import { usePortfolioSounds } from "@/components/sound-effects";
+import { navigationSections, type SectionId } from "./navigation-sections";
+import { site } from "@/lib/site";
 
 interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   isResumeVisible: boolean;
   resumePath: string | null;
-  scrollToSection: (href: string) => void;
+  scrollToSection: (id: SectionId) => void;
   triggerConfetti: () => void;
 }
 
@@ -56,9 +54,6 @@ function CommandPalette({
     onOpenChange(nextOpen);
   };
 
-  const handleAdminClick = () => {
-    router.push("/admin/dashboard");
-  };
 
   return (
     <CommandDialog
@@ -72,30 +67,15 @@ function CommandPalette({
         <CommandEmpty>No results found.</CommandEmpty>
 
         <CommandGroup heading="Navigation">
-          <CommandItem
-            onSelect={() => runCommand(() => scrollToSection("#home"))}
-          >
-            <Home className="mr-2 h-4 w-4" />
-            <span>Home</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => runCommand(() => scrollToSection("#experience"))}
-          >
-            <Briefcase className="mr-2 h-4 w-4" />
-            <span>My Experience</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => runCommand(() => scrollToSection("#projects"))}
-          >
-            <Hammer className="mr-2 h-4 w-4" />
-            <span>Projects</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => runCommand(() => scrollToSection("#about"))}
-          >
-            <Mail className="mr-2 h-4 w-4" />
-            <span>About Me</span>
-          </CommandItem>
+          {navigationSections.map((section) => (
+            <CommandItem
+              key={section.id}
+              onSelect={() => runCommand(() => scrollToSection(section.id))}
+            >
+              <section.icon className="mr-2 h-4 w-4" />
+              <span>{section.commandLabel}</span>
+            </CommandItem>
+          ))}
         </CommandGroup>
 
         <CommandSeparator />
@@ -116,7 +96,7 @@ function CommandPalette({
           <CommandItem
             onSelect={() =>
               runCommand(() => {
-                window.open("https://github.com/teddymalhan", "_blank");
+                window.open(site.links.github, "_blank", "noopener,noreferrer");
               })
             }
           >
@@ -126,7 +106,7 @@ function CommandPalette({
           <CommandItem
             onSelect={() =>
               runCommand(() => {
-                window.open("https://linkedin.com/in/teddymalhan", "_blank");
+                window.open(site.links.linkedin, "_blank", "noopener,noreferrer");
               })
             }
           >
@@ -144,7 +124,7 @@ function CommandPalette({
             <LogIn className="mr-2 h-4 w-4" />
             <span>Sign In</span>
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(handleAdminClick)}>
+          <CommandItem onSelect={() => runCommand(() => router.push("/admin/dashboard"))}>
             <Shield className="mr-2 h-4 w-4" />
             <span>Admin Dashboard</span>
           </CommandItem>

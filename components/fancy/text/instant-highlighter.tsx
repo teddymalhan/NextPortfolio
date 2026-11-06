@@ -2,33 +2,15 @@ import { ElementType } from "react";
 import { cn } from "@/lib/utils";
 
 type InstantHighlighterProps = {
-  /**
-   * The text content to be highlighted
-   */
   children: React.ReactNode;
 
-  /**
-   * HTML element to render as
-   * @default "span"
-   */
   as?: ElementType;
 
-  /**
-   * Class name for the container element
-   */
   className?: string;
 
-  /**
-   * Highlight color (CSS color string)
-   * @default 'hsl(25, 90%, 80%)'
-   */
   highlightColor?: string;
 } & React.HTMLAttributes<HTMLElement>;
 
-/**
- * Lightweight CSS-only text highlighter for instant highlighting
- * Use this instead of TextHighlighter when instant={true} to avoid loading motion library
- */
 export function InstantHighlighter({
   children,
   as: ElementTag = "span",

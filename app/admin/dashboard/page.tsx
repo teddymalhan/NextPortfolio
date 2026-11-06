@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import { isAuthorizedAdmin } from "@/lib/auth";
-import { auth } from "@clerk/nextjs/server";
+import { getAdminUserId } from "@/lib/auth";
 import { AdminDashboardClient } from "./admin-dashboard-client";
 import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper";
 import type { Metadata } from "next";
@@ -11,13 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminDashboard() {
-  const { userId } = await auth();
+  const userId = await getAdminUserId();
   if (!userId) {
-    redirect("/");
-  }
-
-  const authorized = await isAuthorizedAdmin();
-  if (!authorized) {
     redirect("/");
   }
 

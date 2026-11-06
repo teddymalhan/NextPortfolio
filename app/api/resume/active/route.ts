@@ -1,24 +1,24 @@
 import { NextRequest, connection } from 'next/server'
-import { isAuthorizedAdmin } from '@/lib/auth'
-import { resumeService } from '@/lib/services/resume-service'
+import { getAdminUserId } from '@/lib/auth'
+import { resumeService, ResumeOperationError } from '@/lib/services/resume-service'
 import { createErrorResponse, createSuccessResponse, logError } from '@/lib/api-response'
-import { revalidateTag } from 'next/cache'
 import { setActiveResumeSchema } from '@/lib/validations/resume'
 import { capturePostHogEvent } from '@/lib/posthog-server'
 
 export async function PUT(request: NextRequest) {
   await connection()
-  const isAdmin = await isAuthorizedAdmin()
-  if (!isAdmin) {
-    await capturePostHogEvent('api_resume_active_unauthorized', {
-      endpoint: '/api/resume/active',
-      method: 'PUT',
-    })
-    return createErrorResponse('Unauthorized', 403, 'UNAUTHORIZED')
-  }
-
+  let userId: string | null = null
   try {
-    const body = await request.json()
+    userId = await getAdminUserId()
+    if (!userId) {
+      await capturePostHogEvent('api_resume_active_unauthorized', {
+        endpoint: '/api/resume/active',
+        method: 'PUT',
+      })
+      return createErrorResponse('Unauthorized', 403, 'UNAUTHORIZED')
+    }
+
+    const body = await request.json().catch(() => null)
     const validationResult = setActiveResumeSchema.safeParse(body)
 
     if (!validationResult.success) {
@@ -26,7 +26,7 @@ export async function PUT(request: NextRequest) {
         endpoint: '/api/resume/active',
         method: 'PUT',
         error: validationResult.error.issues[0]?.message,
-      })
+      }, userId)
       return createErrorResponse(
         validationResult.error.issues[0]?.message || 'Invalid request',
         400,
@@ -35,25 +35,19 @@ export async function PUT(request: NextRequest) {
     }
 
     const { resumeId } = validationResult.data
-    const resumeRow = await resumeService.setActiveResume(resumeId)
+    const resume = await resumeService.setActiveResume(resumeId)
 
     await capturePostHogEvent('api_resume_active_updated', {
       endpoint: '/api/resume/active',
       method: 'PUT',
       resumeId,
-      filename: resumeRow.filename,
-    })
-
-    revalidateTag('active-resume', 'resume-data')
+      filename: resume.filename,
+    }, userId)
 
     return createSuccessResponse({
-      id: resumeRow.id,
-      filename: resumeRow.filename,
-      blob_url: resumeRow.blob_url,
-      is_active: resumeRow.is_active,
-      uploaded_at: typeof resumeRow.uploaded_at === 'string'
-        ? resumeRow.uploaded_at
-        : resumeRow.uploaded_at.toISOString(),
+      ...resume,
+      is_active: resume.isActive,
+      uploaded_at: resume.uploadedAt,
     })
   } catch (error) {
     logError('PUT /api/resume/active', error)
@@ -62,10 +56,10 @@ export async function PUT(request: NextRequest) {
       endpoint: '/api/resume/active',
       method: 'PUT',
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
+    }, userId ?? 'anonymous')
 
-    if (error instanceof Error && error.message === 'Resume not found') {
-      return createErrorResponse('Resume not found', 404, 'RESUME_NOT_FOUND')
+    if (error instanceof ResumeOperationError) {
+      return createErrorResponse(error.message, error.status, error.code)
     }
 
     return createErrorResponse('Failed to set active resume', 500, 'UPDATE_ERROR')

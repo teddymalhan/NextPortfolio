@@ -10,8 +10,9 @@ interface ExperienceItem {
   period: string;
   location: string;
   logo: string;
-  logoStyle?: "circular" | "square" | "padded";
-  tags?: string[];
+  logoFrameClassName: string;
+  logoImageClassName: string;
+  tags: { emoji: string; label: string }[];
 }
 
 const experiences: ExperienceItem[] = [
@@ -20,18 +21,20 @@ const experiences: ExperienceItem[] = [
     role: "Software Engineer Intern",
     period: "May 2026 - Present",
     location: "Vancouver, BC",
-    tags: ["⎈ PI&E Game Server Hosting"],
+    tags: [{ emoji: "⎈", label: "PI&E Game Server Hosting" }],
     logo: "/ea-logo-full.jpg",
-    logoStyle: "padded",
+    logoFrameClassName: "rounded-2xl p-2.5",
+    logoImageClassName: "object-cover scale-185",
   },
   {
     company: "Electronic Arts",
     role: "Software Engineer Intern",
     period: "May 2025 - Aug 2025",
     location: "Vancouver, BC",
-    tags: ["🕹️ Digital Platform: Arrival"],
+    tags: [{ emoji: "🕹️", label: "Digital Platform: Arrival" }],
     logo: "/ea-logo-full.jpg",
-    logoStyle: "padded",
+    logoFrameClassName: "rounded-2xl p-2.5",
+    logoImageClassName: "object-cover scale-185",
   },
   {
     company: "Dialpad",
@@ -39,8 +42,9 @@ const experiences: ExperienceItem[] = [
     period: "Jan 2025 - Apr 2025",
     location: "Toronto, ON",
     logo: "/dialpad-logo-full.jpg",
-    logoStyle: "square",
-    tags: ["💼 Supervisor Team"],
+    logoFrameClassName: "rounded-xl",
+    logoImageClassName: "object-contain",
+    tags: [{ emoji: "💼", label: "Supervisor Team" }],
   },
   {
     company: "SFU Blueprint",
@@ -48,8 +52,9 @@ const experiences: ExperienceItem[] = [
     period: "June 2024 - Present",
     location: "Vancouver, BC",
     logo: "https://media.licdn.com/dms/image/v2/D560BAQGUjTCDhAjcFA/company-logo_200_200/company-logo_200_200/0/1690849546053/sfu_blueprint_logo?e=2147483647&v=beta&t=JFlsmyor7g50Tsl22WLuHPB8UODRlSMUKJ91Ek3vOxU",
-    logoStyle: "padded",
-    tags: ["💻 Blueprint Website"],
+    logoFrameClassName: "rounded-2xl p-2.5",
+    logoImageClassName: "object-cover scale-180",
+    tags: [{ emoji: "💻", label: "Blueprint Website" }],
   },
   {
     company: "Develop for Good",
@@ -57,8 +62,9 @@ const experiences: ExperienceItem[] = [
     period: "Sept 2024 - Feb 2025",
     location: "Remote",
     logo: "/dfg-logo.png",
-    logoStyle: "padded",
-    tags: ["🐈 Engineering Manager"],
+    logoFrameClassName: "rounded-2xl p-2.5",
+    logoImageClassName: "object-cover scale-180",
+    tags: [{ emoji: "🐈", label: "Engineering Manager" }],
   },
   {
     company: "Simon Fraser University",
@@ -66,8 +72,9 @@ const experiences: ExperienceItem[] = [
     period: "From January 2024",
     location: "Burnaby, BC",
     logo: "/sfu-logo.jpg",
-    logoStyle: "circular",
-    tags: ["📚 Education"],
+    logoFrameClassName: "rounded-full",
+    logoImageClassName: "object-cover",
+    tags: [{ emoji: "📚", label: "Education" }],
   },
 ];
 
@@ -84,12 +91,10 @@ export function Experience() {
       transition={{ duration: 0.5 }}
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-10 pt-16 pb-20">
-        {/* Header */}
         <h1 className="text-5xl font-extrabold tracking-tight text-left text-foreground mb-12">
           Experience
         </h1>
 
-        {/* Experience List */}
         <div className="space-y-16">
           {experiences.map((experience) => {
             return (
@@ -97,7 +102,6 @@ export function Experience() {
                 key={`${experience.company}-${experience.period}`}
                 className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 md:gap-16 pb-16 last:pb-0 group"
               >
-                {/* Left side - Date & Location */}
                 <div className="space-y-0.5">
                   <div className="text-foreground font-semibold text-base tracking-tight">
                     {experience.period}
@@ -107,7 +111,6 @@ export function Experience() {
                   </div>
                 </div>
 
-                {/* Right side - Company Details */}
                 <div className="flex items-start justify-between gap-6">
                   <div className="space-y-4 flex-1">
 
@@ -120,66 +123,36 @@ export function Experience() {
                       </p>
                     </div>
 
-                    {/* Badge (emoji + team) */}
-                    {experience.tags && experience.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 pt-2">
-                        {experience.tags.map((tag: string) => {
-                          const emojiMatch = tag.match(
-                            /^[\p{Emoji}\p{Extended_Pictographic}]/u,
-                          );
-                          const emoji = emojiMatch?.[0];
-                          const text = emoji
-                            ? tag.replace(emoji, "").trim()
-                            : tag;
-                          return (
-                            <Badge
-                              key={tag}
-                              variant="outline"
-                              className="gap-1.5 px-3 py-2 rounded-full border-border/60 text-foreground/85 bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/40 whitespace-normal break-words max-w-[240px] sm:max-w-none"
-                            >
-                              {emoji && (
-                                <span className="text-[15px] leading-none">
-                                  {emoji}
-                                </span>
-                              )}
-                              <span className="text-[13.5px] leading-snug font-medium tracking-tight">
-                                {text}
-                              </span>
-                            </Badge>
-                          );
-                        })}
-                      </div>
-                    )}
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {experience.tags.map((tag) => (
+                        <Badge
+                          key={tag.label}
+                          variant="outline"
+                          className="gap-1.5 px-3 py-2 rounded-full border-border/60 text-foreground/85 bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/40 whitespace-normal break-words max-w-[240px] sm:max-w-none"
+                        >
+                          <span className="text-[15px] leading-none">
+                            {tag.emoji}
+                          </span>
+                          <span className="text-[13.5px] leading-snug font-medium tracking-tight">
+                            {tag.label}
+                          </span>
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="flex-shrink-0">
                     <div className="group-hover:scale-105 transition-transform duration-300">
                       <div
                         className={`relative w-16 h-16 flex items-center justify-center overflow-hidden bg-background border border-border/40 shadow-sm
-                          ${
-                            experience.logoStyle === "circular"
-                              ? "rounded-full"
-                              : experience.logoStyle === "padded"
-                                ? "rounded-2xl p-2.5"
-                                : "rounded-xl"
-                          }`}
+                          ${experience.logoFrameClassName}`}
                       >
                         <div className={`relative w-full h-full`}>
                           <Image
                             src={experience.logo}
                             alt={`${experience.company} logo`}
                             fill
-                            className={
-                              experience.company === "Electronic Arts"
-                                ? "object-cover scale-185"
-                                : experience.company === "Develop for Good"
-                                  ? "object-cover scale-180"
-                                  : experience.company === "SFU Blueprint"
-                                    ? "object-cover scale-180"
-                                    : experience.logoStyle === "circular"
-                                      ? "object-cover"
-                                      : "object-contain"
-                            }
+                            className={experience.logoImageClassName}
                             sizes="(min-resolution: 2dppx) 128px, 64px"
                             loading="lazy"
                             decoding="async"

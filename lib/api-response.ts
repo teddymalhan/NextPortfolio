@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { ApiErrorResponse, ApiSuccessResponse } from '@/types/api'
 
-// Standardized error response helper
 export function createErrorResponse(
   error: string,
   status: number = 500,
@@ -17,7 +16,6 @@ export function createErrorResponse(
   )
 }
 
-// Standardized success response helper
 export function createSuccessResponse<T>(
   data: T,
   status: number = 200
@@ -31,7 +29,6 @@ export function createSuccessResponse<T>(
   )
 }
 
-// Error logging helper
 export function logError(context: string, error: unknown): void {
   const errorMessage = error instanceof Error ? error.message : String(error)
   const errorStack = error instanceof Error ? error.stack : undefined

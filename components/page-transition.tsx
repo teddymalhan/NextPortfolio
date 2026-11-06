@@ -17,72 +17,55 @@ interface PageTransitionContextValue {
   navigateTo: (href: string, direction?: Direction) => void;
 }
 
-const PageTransitionContext = createContext<PageTransitionContextValue>({
-  navigateTo: () => {},
-});
+const PageTransitionContext = createContext<PageTransitionContextValue | null>(null);
 
 export function usePageTransition() {
-  return useContext(PageTransitionContext);
+  const context = useContext(PageTransitionContext);
+  if (!context) throw new Error("usePageTransition requires PageTransitionProvider");
+  return context;
 }
 
-
-function transitionPathname(href: string) {
-  try {
-    return new URL(href, "http://local").pathname;
-  } catch {
-    return href.split(/[?#]/, 1)[0] || "/";
-  }
-}
 export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const isFirstRender = useRef(true);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const previousPath = useRef(pathname);
+  const direction = useRef<Direction>("forward");
+  const homeScrollPosition = useRef<number | null>(null);
+  const pendingPath = useRef<string | null>(null);
   const { playPageEnter, playPageExit } = usePortfolioSounds();
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
+    if (previousPath.current === pathname) return;
+    previousPath.current = pathname;
+
+    if (pendingPath.current === pathname || (pathname === "/" && homeScrollPosition.current !== null)) {
+      window.scrollTo({
+        top: pathname === "/" ? homeScrollPosition.current ?? 0 : 0,
+        behavior: "instant",
+      });
+      pendingPath.current = null;
+      if (pathname === "/") homeScrollPosition.current = null;
     }
 
-    const el = wrapperRef.current;
-    if (!el) return;
-
-    let direction: Direction = "forward";
-    try {
-      direction =
-        (sessionStorage.getItem("pageTransitionDirection") as Direction) ??
-        "forward";
-    } catch {}
-
-    const enterCls =
-      direction === "forward" ? "page-enter-right" : "page-enter-left";
-    el.classList.remove(
-      "page-enter-right",
-      "page-enter-left",
-      "page-exit-left",
-      "page-exit-right"
-    );
-    void el.offsetHeight;
-    el.classList.add(enterCls);
+    const element = wrapperRef.current;
+    if (!element) return;
+    element.classList.remove("page-enter-right", "page-enter-left");
+    void element.offsetHeight;
+    element.classList.add(direction.current === "forward" ? "page-enter-right" : "page-enter-left");
+    direction.current = "forward";
     playPageEnter();
   }, [pathname, playPageEnter]);
 
-
   const navigateTo = useCallback(
-    (href: string, direction: Direction = "forward") => {
-      const targetPath = transitionPathname(href);
-      if (targetPath === pathname) {
-        return;
-      }
+    (href: string, nextDirection: Direction = "forward") => {
+      const targetPath = new URL(href, window.location.href).pathname;
+      if (targetPath === pathname) return;
+      if (pathname === "/") homeScrollPosition.current = window.scrollY;
+      direction.current = nextDirection;
+      pendingPath.current = targetPath;
       playPageExit();
-
-      try {
-        sessionStorage.setItem("pageTransitionDirection", direction);
-      } catch {}
-
-      router.push(href);
+      router.push(href, { scroll: false });
     },
     [pathname, router, playPageExit]
   );

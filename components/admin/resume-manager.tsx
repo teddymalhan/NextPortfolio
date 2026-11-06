@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useResumeManagerStore } from "@/stores";
+import { useResumeManagerStore } from "./resume-manager-store";
 import { ResumeStats } from "./resume-stats";
 import { ResumeVisibilityCard } from "./resume-visibility-card";
 import { ResumeListSection } from "./resume-list-section";

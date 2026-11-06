@@ -1,129 +1,45 @@
-/**
- * Project data types and content for portfolio
- */
+import { prepareWriteup, type PreparedSection } from "./technical-terms";
 
-// Terminal animation step types
-export interface TerminalStep {
-  text: string;
-  type: "command" | "output" | "success" | "error" | "progress";
-  delay?: number;
-}
-
-// Feature bullet with colored dot
-export interface ProjectFeature {
-  text: string;
-  dotColor: string;
-}
-
-// External link for sidebar
 export interface ProjectLink {
   label: string;
   href: string;
-  icon: "ExternalLink" | "Github" | "Youtube" | "FileText" | "Play";
+  icon: "ExternalLink" | "Github" | "FileText";
 }
 
-// Timeline entry
-export interface TimelineEntry {
-  date: string;
-  event?: string;
-}
-
-// Media for demo section
-export interface ProjectMedia {
-  type: "image" | "video" | "gif";
-  src: string;
-  alt: string;
-  caption?: string;
-}
-
-// Content section (Overview, Background, etc.)
-export interface ContentSection {
-  title: string;
-  paragraphs: string[];
-  bullets?: string[];
-  emoji?: string;
-  image?: { src: string; alt: string; caption?: string };
-}
-
-// Project type categories
-export type ProjectType = "internship" | "hackathon" | "personal" | "opensource";
-
-// Full project data
-export interface Project {
-  // Identity
+export interface ProjectCard {
   slug: string;
-  name: string;
   title: string;
-  tagline?: string;
-
-  // Metadata
-  period: string;
-  year: number;
-  technologies: string[];
-  type: ProjectType;
-  featured?: boolean;
-  award?: string;
-
-  // Card content
   description: string;
-  cta: string;
+  tags: string[];
   heroImage: string;
-  heroImageFit?: "cover" | "contain";
   cardImageLoading?: "eager" | "lazy";
   gridClassName: string;
+}
 
-  // External links
-  href: string;
-  github?: string;
-  demo?: string;
+interface ProjectContent extends Omit<ProjectCard, "tags"> {
+  tagline?: string;
+  period: string;
+  technologies: string[];
   links: ProjectLink[];
-
-  // Detail page - Hero
-  desktopMockup?: string;
-  mobileMockups?: string[];
   detailHeroImageFit?: "cover" | "contain";
   detailHeroAspect?: "standard" | "banner";
-
-  // Detail page - Demo
-  demoMedia?: ProjectMedia;
-
-  // Detail page - Content
-  sections: ContentSection[];
-
-  // Detail page - Sidebar
-  timeline: TimelineEntry[];
+  sections: { title: string; paragraphs: string[] }[];
+  timeline: { date: string }[];
   tools: string[];
 }
 
-// Simplified type for bento card display
-type BentoProject = Pick<
-  Project,
-  | "slug"
-  | "name"
-  | "title"
-  | "period"
-  | "description"
-  | "cta"
-  | "technologies"
-  | "featured"
-  | "award"
-  | "type"
-  | "heroImage"
-  | "heroImageFit"
-  | "cardImageLoading"
-  | "gridClassName"
->;
+export interface Project extends Omit<ProjectContent, "sections" | "technologies"> {
+  sections: PreparedSection[];
+  termImageSources: string[];
+}
 
-// Project data
-const projects: Project[] = [
+const projectContent: ProjectContent[] = [
   {
     slug: "cloudreaper-alerts",
-    name: "CloudReaper Alerts",
     title: "CloudReaper Alerts",
     tagline:
       "Orphaned AWS resource detection with scheduled scans, event-driven checks, and Slack alerts",
     period: "2026 – Present",
-    year: 2026,
     technologies: [
       "Go",
       "AWS Lambda",
@@ -132,17 +48,11 @@ const projects: Project[] = [
       "SQS",
       "Slack API",
     ],
-    type: "opensource",
-    featured: true,
     description:
       "Finds orphaned AWS resources with Go Lambdas and sends alerts to Slack.",
-    cta: "Explore CloudReaper Alerts",
     heroImage: "/cloudreaper-alerts.png",
-    heroImageFit: "cover",
     cardImageLoading: "eager",
     gridClassName: "col-span-3 lg:col-span-2",
-    href: "https://github.com/teddymalhan/cloudreaper-alerts",
-    github: "https://github.com/teddymalhan/cloudreaper-alerts",
     links: [
       {
         label: "View on GitHub",
@@ -195,12 +105,10 @@ const projects: Project[] = [
   },
   {
     slug: "pallasdb",
-    name: "PallasDB",
     title: "PallasDB",
     tagline:
       "A self-hosted, distributed key-value database in Go with an LSM storage engine and Raft-backed replication",
     period: "2026 – Present",
-    year: 2026,
     technologies: [
       "Go",
       "LSM Trees",
@@ -211,18 +119,12 @@ const projects: Project[] = [
       "HashiCorp Raft",
       "Serf",
     ],
-    type: "opensource",
-    featured: true,
     description:
       "A distributed key-value database in Go with crash-safe storage and Raft replication.",
-    cta: "Explore PallasDB",
     heroImage: "/pallasdb-banner.png",
-    heroImageFit: "cover",
     detailHeroImageFit: "contain",
     detailHeroAspect: "banner",
     gridClassName: "col-span-3 lg:col-span-1",
-    href: "https://pallasdb.com",
-    github: "https://github.com/PallasDB/PallasDB",
     links: [
       {
         label: "Visit PallasDB",
@@ -281,11 +183,9 @@ const projects: Project[] = [
   },
   {
     slug: "argus",
-    name: "Argus",
     title: "Argus",
     tagline: "Version control for quantitative research models, datasets, and experiment results",
     period: "nwHacks 2026 Winner",
-    year: 2026,
     technologies: [
       "Rust",
       "Python",
@@ -293,15 +193,10 @@ const projects: Project[] = [
       "Gemini AI",
       "Vultr",
     ],
-    type: "hackathon",
-    featured: true,
     description:
       "Won nwHacks 2026. Version control for quantitative research models, datasets and results.",
-    cta: "View Project",
     heroImage: "/argus.png",
     gridClassName: "col-span-3 lg:col-span-1",
-    href: "https://github.com/teddymalhan/argus",
-    github: "https://github.com/teddymalhan/argus",
     links: [
       {
         label: "View on GitHub",
@@ -351,22 +246,15 @@ const projects: Project[] = [
   },
   {
     slug: "digital-scorecards",
-    name: "Digital Scorecards",
     title: "Digital Scorecards at Dialpad",
     tagline:
       "Real-time performance tracking for more than 1,000 agents, with 60% less manual review time",
     period: "January 2025 - April 2025 (Internship)",
-    year: 2024,
     technologies: ["Vue.js", "Django", "Python", "Google Cloud Platform"],
-    type: "internship",
     description:
       "Cut manual call review time by 60% thousands of agents using Dialpad.",
-    cta: "Read More",
     heroImage: "/digital_scorecards.webp",
     gridClassName: "col-span-3 lg:col-span-2",
-    href: "https://www.dialpad.com/blog/new-dialpad-features-and-updates-for-the-enterprise-contact-center/?utm_source=chatgpt.com#:~:text=Digital%20dispositions%20and-,digital%20scorecards,-bring%20accountability%20and",
-    github: "#",
-    demo: "https://www.dialpad.com/blog/new-dialpad-features-and-updates-for-the-enterprise-contact-center/?utm_source=chatgpt.com#:~:text=Digital%20dispositions%20and-,digital%20scorecards,-bring%20accountability%20and",
     links: [
       {
         label: "Read Blog Post",
@@ -410,6 +298,21 @@ const projects: Project[] = [
   },
 ];
 
+const projects: Project[] = projectContent.map(({ sections, technologies: _technologies, ...project }) => ({
+  ...project,
+  ...prepareWriteup(sections),
+}));
+
+const projectCards: ProjectCard[] = projectContent.map((project) => ({
+  slug: project.slug,
+  title: project.title,
+  description: project.description,
+  tags: project.technologies.slice(0, 3),
+  heroImage: project.heroImage,
+  cardImageLoading: project.cardImageLoading,
+  gridClassName: project.gridClassName,
+}));
+
 export function getProjectBySlug(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
 }
@@ -418,39 +321,7 @@ export function getAllProjects(): Project[] {
   return projects;
 }
 
-export function getBentoProjects(): BentoProject[] {
-  return projects.map(
-    ({
-      slug,
-      name,
-      title,
-      period,
-      description,
-      cta,
-      technologies,
-      featured,
-      award,
-      type,
-      heroImage,
-      heroImageFit,
-      cardImageLoading,
-      gridClassName,
-    }) => ({
-      slug,
-      name,
-      title,
-      period,
-      description,
-      cta,
-      technologies,
-      featured,
-      award,
-      type,
-      heroImage,
-      heroImageFit,
-      cardImageLoading,
-      gridClassName,
-    })
-  );
+export function getProjectCards(): ProjectCard[] {
+  return projectCards;
 }
 

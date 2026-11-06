@@ -1,14 +1,8 @@
 "use client";
 
 import { useId, useState } from "react";
-import {
-  Glimpse,
-  GlimpseContent,
-  GlimpseDescription,
-  GlimpseImage,
-  GlimpseTitle,
-  GlimpseTrigger,
-} from "@/components/kibo-ui/glimpse";
+import { Glimpse, GlimpsePreview } from "@/components/kibo-ui/glimpse";
+import { HoverCardTrigger } from "@/components/ui/hover-card";
 import type { TechnicalTerm as TechnicalTermDefinition } from "@/lib/technical-terms";
 import { usePrioritizeTermImage } from "./term-image-preloader";
 
@@ -25,7 +19,7 @@ export function TechnicalTerm({
 
   return (
     <Glimpse open={open} onOpenChange={setOpen}>
-      <GlimpseTrigger asChild>
+      <HoverCardTrigger asChild>
         <button
           type="button"
           aria-expanded={open}
@@ -43,26 +37,18 @@ export function TechnicalTerm({
         >
           {children}
         </button>
-      </GlimpseTrigger>
-      <GlimpseContent
+      </HoverCardTrigger>
+      <GlimpsePreview
         id={id}
         role="tooltip"
         aria-labelledby={`${id}-title`}
-        className="overflow-hidden p-0"
-      >
-        <GlimpseImage
-          src={term.image.src}
-          alt={term.image.alt}
-          loading="eager"
-          fetchPriority="high"
-        />
-        <div className="p-4">
-          <GlimpseTitle id={`${id}-title`}>{term.title}</GlimpseTitle>
-          <GlimpseDescription id={`${id}-description`} className="mt-2">
-            {term.description}
-          </GlimpseDescription>
-        </div>
-      </GlimpseContent>
+        titleId={`${id}-title`}
+        descriptionId={`${id}-description`}
+        title={term.title}
+        description={term.description}
+        image={term.image}
+        intent
+      />
     </Glimpse>
   );
 }

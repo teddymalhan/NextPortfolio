@@ -24,24 +24,9 @@
   --border: #d0d7de; /* border.default */
   --input: #ffffff; /* canvas.default */
   --ring: #0969da; /* accent.fg */
-  --chart-1: #0969da; /* accent.fg (blue) */
-  --chart-2: #1a7f37; /* success.fg (green) */
-  --chart-3: #9a6700; /* attention.fg (yellow) */
-  --chart-4: #cf222e; /* danger.fg (red) */
-  --chart-5: #8250df; /* done.fg (purple) */
   --radius: 0.5rem;
-  --sidebar: #f6f8fa; /* canvas.inset */
-  --sidebar-foreground: #1F2328; /* fg.default */
-  --sidebar-primary: #0969da; /* accent.fg */
-  --sidebar-primary-foreground: #ffffff; /* fg.onEmphasis */
-  --sidebar-accent: #f6f8fa; /* canvas.subtle */
-  --sidebar-accent-foreground: #1F2328; /* fg.default */
-  --sidebar-border: #d0d7de; /* border.default */
-  --sidebar-ring: #0969da; /* accent.fg */
 }
 
-/* transitions-dev — copy this :root block into your project once.
-   Every transition snippet reads from these semantic names. */
 :root {
   /* Card resize */
   --resize-dur: 300ms;
@@ -77,27 +62,12 @@
   --dropdown-pre-scale: 0.97;
   --dropdown-closing-scale: 0.99;
   --dropdown-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  /* Modal open / close */
-  --modal-open-dur: 250ms;
-  --modal-close-dur: 150ms;
-  --modal-scale: 0.96;
-  --modal-scale-close: 0.96;
-  --modal-ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* Panel reveal */
   --panel-open-dur: 400ms;
   --panel-close-dur: 350ms;
   --panel-translate-y: 100px;
   --panel-blur: 2px;
   --panel-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  /* Page side-by-side */
-  --page-slide-dur: 200ms;
-  --page-fade-dur: 200ms;
-  --page-slide-distance: 8px;
-  --page-blur: 3px;
-  --page-stagger: 0ms;
-  --page-exit-enabled: 1;
-  --page-slide-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --page-fade-ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* Icon swap */
   --icon-swap-dur: 200ms;
   --icon-swap-blur: 2px;
@@ -146,13 +116,10 @@
   --glow-peak-at: 0.15;
   --glow-opacity: 0.42;
   --glow-spread: 1.5;
-  /* Skeleton loader and reveal */
+  /* Loading skeleton pulse */
   --pulse-dur: 1000ms;
   --pulse-count: 1;
   --pulse-min: 0.5;
-  --reveal-dur: 400ms;
-  --reveal-blur: 2px;
-  --reveal-ease: ease-in-out;
   /* Shimmer text */
   --shimmer-dur: 2000ms;
   --shimmer-base: #7c7c7c;
@@ -216,19 +183,6 @@
   --border: #30363d; /* border.default */
   --input: #161b22; /* canvas.overlay */
   --ring: #2f81f7; /* accent.fg */
-  --chart-1: #2f81f7; /* accent.fg (blue) */
-  --chart-2: #3fb950; /* success.fg (green) */
-  --chart-3: #d29922; /* attention.fg (yellow) */
-  --chart-4: #f85149; /* danger.fg (red) */
-  --chart-5: #a371f7; /* done.fg (purple) */
-  --sidebar: #161b22; /* canvas.overlay */
-  --sidebar-foreground: #e6edf3; /* fg.default */
-  --sidebar-primary: #2f81f7; /* accent.fg */
-  --sidebar-primary-foreground: #ffffff; /* fg.onEmphasis */
-  --sidebar-accent: #21262d; /* border.muted */
-  --sidebar-accent-foreground: #e6edf3; /* fg.default */
-  --sidebar-border: #21262d; /* border.muted */
-  --sidebar-ring: #2f81f7; /* accent.fg */
 }
 
 @theme inline {
@@ -253,38 +207,12 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Custom keyframes */
-  --animate-pop-blob: pop-blob 5s infinite;
-
-  /* Custom blur filters */
-  --blur-20: blur(20px);
-  --blur-25: blur(25px);
 }
 
-@keyframes pop-blob {
-  0% { transform: scale(1); }
-  33% { transform: scale(1.2); }
-  66% { transform: scale(0.8); }
-  100% { transform: scale(1); }
-}
 
 @layer base {
   html {
@@ -306,7 +234,7 @@
   }
 }
 
-/* Hide scrollbar globally - consolidated for performance */
+/* Hide the document scrollbar while retaining scrolling. */
 html, body {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
@@ -338,16 +266,6 @@ body::-webkit-scrollbar {
   height: 0;
 }
 
-/* Utility classes for text selection */
-.selectable-text {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-}
-
-
-/* transitions-dev snippets */
 .t-resize {
   transition:
     width  var(--resize-dur) var(--resize-ease),
@@ -453,45 +371,6 @@ body::-webkit-scrollbar {
   .t-panel-slide { transition: none !important; }
 }
 
-.t-modal {
-  transform-origin: center;
-  transform: scale(var(--modal-scale));
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    transform var(--modal-open-dur) var(--modal-ease),
-    opacity   var(--modal-open-dur) var(--modal-ease);
-  will-change: transform, opacity;
-}
-.t-modal.is-open {
-  transform: scale(1);
-  opacity: 1;
-  pointer-events: auto;
-}
-.t-modal.is-closing {
-  transform: scale(var(--modal-scale-close));
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    transform var(--modal-close-dur) var(--modal-ease),
-    opacity   var(--modal-close-dur) var(--modal-ease);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .t-modal { transition: none !important; }
-}
-
-.t-modal[data-state="open"] {
-  transform: scale(1);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.t-modal[data-state="closed"] {
-  transform: scale(var(--modal-scale-close));
-  opacity: 0;
-  pointer-events: none;
-}
 
 .t-icon-swap {
   position: relative;
@@ -570,62 +449,17 @@ body::-webkit-scrollbar {
   mix-blend-mode: screen;
 }
 
-/* The transitions live in JS (per-frame transform/opacity/
-   filter writes), so this stylesheet only owns the resting
-   state + the variables that JS reads. Read them with
-   `parseFloat(getComputedStyle(root).getPropertyValue(...))`
-   so live tweaks apply on the next clear without a reload. */
 
 @media (prefers-reduced-motion: reduce) {
   .t-clear-glow { opacity: 0 !important; }
 }
 
-/* The wrap stacks two layers on the same coordinates. The
-   skeleton owns the cold pulse + the fade-out side of the
-   reveal; the content owns the fade-in side. They share the
-   same duration / ease so the swap reads as one motion. */
 .t-skel { position: relative; }
-.t-skel-skeleton,
-.t-skel-content {
+.t-skel-skeleton {
   position: absolute;
   inset: 0;
-}
-
-.t-skel-skeleton {
   z-index: 1;
-  opacity: 1;
-  filter: blur(0);
-  transition:
-    opacity var(--reveal-dur) var(--reveal-ease),
-    filter  var(--reveal-dur) var(--reveal-ease);
 }
-.t-skel-content {
-  z-index: 2;
-  opacity: 0;
-  filter: blur(var(--reveal-blur));
-  transition:
-    opacity var(--reveal-dur) var(--reveal-ease),
-    filter  var(--reveal-dur) var(--reveal-ease);
-}
-.t-skel.is-revealed .t-skel-skeleton {
-  opacity: 0;
-  filter: blur(var(--reveal-blur));
-}
-.t-skel.is-revealed .t-skel-content {
-  opacity: 1;
-  filter: blur(0);
-}
-/* Snap-back when replaying: kill transitions so the reverse
-   (revealed → skeleton) is instant. Drop `.is-resetting`
-   after a forced reflow and the next reveal animates again. */
-.t-skel.is-resetting .t-skel-skeleton,
-.t-skel.is-resetting .t-skel-content {
-  transition: none !important;
-}
-
-/* Pulse: place the animation on the bar/avatar children, not
-   on the skeleton itself, so the skeleton's opacity / filter
-   stay free for the cross-fade transition above. */
 .t-skel-skeleton.is-pulsing > * {
   animation: t-skel-pulse var(--pulse-dur) ease-in-out var(--pulse-count);
 }
@@ -635,9 +469,6 @@ body::-webkit-scrollbar {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .t-skel-skeleton, .t-skel-content {
-    transition: none !important;
-  }
   .t-skel-skeleton.is-pulsing > * { animation: none !important; }
 }
 
@@ -754,40 +585,6 @@ body::-webkit-scrollbar {
   .t-text-swap { transition: none !important; }
 }
 
-.t-page-slide {
-  position: relative;
-}
-.t-page-slide .t-page[data-page-id="1"] {
-  --t-page-from-x: calc(var(--page-slide-distance) * -1);
-}
-.t-page-slide .t-page[data-page-id="2"] {
-  --t-page-from-x: var(--page-slide-distance);
-}
-.t-page-slide .t-page {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(calc(var(--t-page-from-x, 0px) * var(--page-exit-enabled)));
-  filter: blur(calc(var(--page-blur) * var(--page-exit-enabled)));
-  transition:
-    opacity   var(--page-fade-dur)  var(--page-fade-ease),
-    transform var(--page-slide-dur) var(--page-slide-ease),
-    filter    var(--page-slide-dur) var(--page-slide-ease);
-  will-change: opacity, transform, filter;
-}
-.t-page-slide[data-page="1"] .t-page[data-page-id="1"],
-.t-page-slide[data-page="2"] .t-page[data-page-id="2"] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-  filter: blur(0);
-  transition-delay: var(--page-stagger);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .t-page-slide .t-page { transition: none !important; }
-}
 
 /* Wrapper drives the appear animation; it doesn't own any
    sizing or color so you can drop in any icon. */
@@ -1034,9 +831,7 @@ body::-webkit-scrollbar {
     opacity   var(--tt-out-dur) var(--tt-out-ease),
     transform var(--tt-out-dur) var(--tt-out-ease);
 }
-/* The 50ms delay belongs ONLY to the hover rule so leaving
-   the trigger snaps the delay back to 0 and the disappear
-   plays immediately. */
+/* Delay entry only; departure starts immediately. */
 .t-tt-wrap:hover .t-tt,
 .t-tt-wrap:focus-within .t-tt,
 .t-tt-trigger:focus-visible + .t-tt {
@@ -1051,36 +846,7 @@ body::-webkit-scrollbar {
   .t-tt { transition: none !important; }
 }
 
-.glimpse-content[data-state="open"] {
-  animation: glimpse-in var(--tt-in-dur) var(--tt-in-ease);
-}
 
-.glimpse-content[data-state="closed"] {
-  animation: glimpse-out var(--tt-out-dur) var(--tt-out-ease);
-}
-
-@keyframes glimpse-in {
-  from { opacity: 0; transform: scale(var(--tt-scale)); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes glimpse-out {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(var(--tt-scale)); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glimpse-content { animation: none !important; }
-}
-.copy-button {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-}
-
-::view-transition-old(root), ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-}
 
 /* ── Page transitions ──────────────────────────────────── */
 :root {
@@ -1118,36 +884,6 @@ body::-webkit-scrollbar {
   }
 }
 
-/* ── Command / Search dialog open-close animation ────────────────────────
-   Mirrors the transitions.dev dropdown: scale 0.97→1 open (250ms),
-   scale 1→0.99 close (150ms), cubic-bezier(0.22, 1, 0.36, 1).
-   Translate kept in keyframes so centering holds during animation.
-   Radix sets data-state="open"/"closed" and waits for animationend.        */
-:root {
-  --cmd-open-dur: 250ms;
-  --cmd-close-dur: 150ms;
-  --cmd-ease: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes cmd-open {
-  from { opacity: 0; transform: scale(0.97); }
-  to   { opacity: 1; transform: scale(1); }
-}
-@keyframes cmd-close {
-  from { opacity: 1; transform: scale(1); }
-  to   { opacity: 0; transform: scale(0.99); }
-}
-
-[data-slot="dialog-content"][data-state="open"] {
-  animation: cmd-open var(--cmd-open-dur) var(--cmd-ease) both;
-}
-[data-slot="dialog-content"][data-state="closed"] {
-  animation: cmd-close var(--cmd-close-dur) var(--cmd-ease) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-slot="dialog-content"] { animation: none !important; }
-}
 
 /* Fill button effect - matches page theme */
 .fill {

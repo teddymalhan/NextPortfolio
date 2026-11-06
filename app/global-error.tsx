@@ -10,7 +10,6 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log error to console in development
     if (process.env.NODE_ENV === "development") {
       console.error("Global error:", error)
     }

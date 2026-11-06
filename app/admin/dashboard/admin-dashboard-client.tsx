@@ -7,20 +7,20 @@ import { Button } from "@/components/ui/button";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { ResumeManager } from "@/components/admin/resume-manager";
 import Link from "next/link";
+import { Toaster } from "sonner";
 
 export function AdminDashboardClient() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Ambient glow background */}
+      <Toaster richColors />
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-1/4 left-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-12">
-        {/* Header */}
         <m.header
           initial={prefersReducedMotion ? false : { opacity: 0, y: -10 }}
           animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
@@ -55,7 +55,6 @@ export function AdminDashboardClient() {
           </div>
         </m.header>
 
-        {/* Main Content */}
         <m.main
           initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
           animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}

@@ -16,7 +16,9 @@ export function usePortfolioSounds() {
       if (!patch.ready) return;
       try {
         patch.play(name, { volume });
-      } catch {}
+      } catch {
+        // Optional audio must not interrupt the interaction it accompanies.
+      }
     },
     [patch]
   );

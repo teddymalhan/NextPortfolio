@@ -8,16 +8,8 @@ interface WebGLShaderBackgroundProps {
 
 export function WebGLShaderBackground({ className }: WebGLShaderBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const programRef = useRef<WebGLProgram | null>(null)
-  const ctimeRef = useRef(0)
-  const ptimeRef = useRef(0)
-  const pdeltaRef = useRef(0)
-  const pausedRef = useRef(false)
-  const animationFrameRef = useRef<number | null>(null)
-  const glRef = useRef<WebGL2RenderingContext | null>(null)
 
   useEffect(() => {
-    // Calculate random values once per component mount
     const shaderMode = Math.random() > 0.5 ? "GRID" : "LINE"
     const rotation = Math.random() * Math.PI * 2
     const colorIndex = Math.floor(Math.random() * 7)
@@ -37,43 +29,54 @@ export function WebGLShaderBackground({ className }: WebGLShaderBackgroundProps)
     const gl = canvas.getContext("webgl2", { antialias: true, preserveDrawingBuffer: true })
     if (!gl) return
 
-    glRef.current = gl
+    const shaders: WebGLShader[] = []
+    let program: WebGLProgram | null = null
+    let vertexBuffer: WebGLBuffer | null = null
+    let animationFrame: number | null = null
+    let previousFrameTime: number | null = null
+    let elapsedTime = 0
+    let manuallyPaused = false
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 
-    // Compile shader
+    const releaseResources = () => {
+      if (animationFrame !== null) cancelAnimationFrame(animationFrame)
+      if (vertexBuffer) gl.deleteBuffer(vertexBuffer)
+      if (program) gl.deleteProgram(program)
+      shaders.forEach((shader) => gl.deleteShader(shader))
+    }
+
     const compileShader = (shaderSource: string, shaderType: number) => {
       const shader = gl.createShader(shaderType)
       if (!shader) throw new Error("Could not create shader")
+      shaders.push(shader)
       gl.shaderSource(shader, shaderSource)
       gl.compileShader(shader)
       const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
       if (!success) {
-        throw "could not compile shader:" + gl.getShaderInfoLog(shader)
+        throw new Error("Could not compile shader: " + gl.getShaderInfoLog(shader))
       }
       return shader
     }
 
-    // Create shader program
     const createProgram = (vertexShader: WebGLShader, fragmentShader: WebGLShader) => {
-      const program = gl.createProgram()
+      program = gl.createProgram()
       if (!program) throw new Error("Could not create program")
       gl.attachShader(program, vertexShader)
       gl.attachShader(program, fragmentShader)
       gl.linkProgram(program)
       const success = gl.getProgramParameter(program, gl.LINK_STATUS)
       if (!success) {
-        throw "program failed to link:" + gl.getProgramInfoLog(program)
+        throw new Error("Program failed to link: " + gl.getProgramInfoLog(program))
       }
       return program
     }
 
-    // Vertex shader source
     const vertexShaderSource = `attribute vec2 aVertexPosition;
 void main() {
   gl_Position = vec4(aVertexPosition, 0.0, 1.0);
 }
 `
 
-    // Fragment shader source
     const fragmentShaderSource = `#ifdef GL_ES
 precision highp float;
 #endif
@@ -141,118 +144,84 @@ void main() {
 }
 `
 
-    // Initialize
-    const init = () => {
-      const vertices = new Float32Array([-1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1])
-      const vertexBuffer = gl.createBuffer()
+    try {
+      vertexBuffer = gl.createBuffer()
+      if (!vertexBuffer) throw new Error("Could not create vertex buffer")
       gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1]),
+        gl.STATIC_DRAW,
+      )
+      const vertexShader = compileShader(vertexShaderSource, gl.VERTEX_SHADER)
+      const fragmentShader = compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
+      const linkedProgram = createProgram(vertexShader, fragmentShader)
+      const vertexPosition = gl.getAttribLocation(linkedProgram, "aVertexPosition")
+      gl.enableVertexAttribArray(vertexPosition)
+      gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, false, 0, 0)
+      gl.useProgram(linkedProgram)
 
-      const v = compileShader(vertexShaderSource, gl.VERTEX_SHADER)
-      const f = compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
-      const program = createProgram(v, f)
-      programRef.current = program
-
-      const aVertexPosition = gl.getAttribLocation(program, "aVertexPosition")
-      gl.enableVertexAttribArray(aVertexPosition)
-      gl.vertexAttribPointer(aVertexPosition, 2, gl.FLOAT, false, 0, 0)
-      gl.useProgram(program)
-      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-    }
-
-    // Resize handler
-    const resize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      canvas.style.width = "100%"
-      canvas.style.height = "100%"
-    }
-
-    // Render function
-    const render = (time: number) => {
-      if (!gl || !programRef.current) return
-
-      gl.viewport(0, 0, canvas.width, canvas.height)
-      gl.clearColor(1, 1, 1, 1)
-      gl.clear(gl.COLOR_BUFFER_BIT)
-
-      const uResolution = gl.getUniformLocation(programRef.current, "u_resolution")
-      gl.uniform2fv(uResolution, [gl.canvas.width, gl.canvas.height])
-
-      const uTime = gl.getUniformLocation(programRef.current, "u_time")
-      gl.uniform1f(uTime, ctimeRef.current * 0.001)
-
-      gl.drawArrays(gl.TRIANGLES, 0, 6)
-
-      if (!pausedRef.current) {
-        ctimeRef.current = time - pdeltaRef.current
-        animationFrameRef.current = requestAnimationFrame(render)
+      const resolutionUniform = gl.getUniformLocation(linkedProgram, "u_resolution")
+      const timeUniform = gl.getUniformLocation(linkedProgram, "u_time")
+      const draw = () => {
+        gl.viewport(0, 0, canvas.width, canvas.height)
+        gl.clearColor(1, 1, 1, 1)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        gl.uniform2f(resolutionUniform, canvas.width, canvas.height)
+        gl.uniform1f(timeUniform, elapsedTime * 0.001)
+        gl.drawArrays(gl.TRIANGLES, 0, 6)
       }
-    }
 
-    // Pause/unpause handlers
-    const pause = () => {
-      pausedRef.current = true
-      ptimeRef.current = performance.now()
-    }
-
-    const unpause = () => {
-      pausedRef.current = false
-      pdeltaRef.current += performance.now() - ptimeRef.current
-      ptimeRef.current = 0.0
-      animationFrameRef.current = requestAnimationFrame(render)
-    }
-
-    // Mouse click handler
-    const handleMouseDown = () => {
-      if (!pausedRef.current) {
-        pause()
-      } else {
-        unpause()
+      const isPaused = () => manuallyPaused || document.hidden || mediaQuery.matches
+      const syncPlayback = () => {
+        if (isPaused()) {
+          if (animationFrame !== null) cancelAnimationFrame(animationFrame)
+          animationFrame = null
+          previousFrameTime = null
+        } else if (animationFrame === null) {
+          animationFrame = requestAnimationFrame(render)
+        }
       }
-    }
-
-    // Reduced motion handler
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
-    const handleMotionChange = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        pause()
-      } else {
-        unpause()
+      const render = (time: number) => {
+        animationFrame = null
+        if (isPaused()) {
+          previousFrameTime = null
+          return
+        }
+        if (previousFrameTime !== null) elapsedTime += time - previousFrameTime
+        previousFrameTime = time
+        draw()
+        syncPlayback()
       }
-    }
-
-    // Page Visibility API to pause when tab is inactive
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        pause()
-      } else if (!mediaQuery.matches) {
-        unpause()
+      const resize = () => {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        canvas.style.width = "100%"
+        canvas.style.height = "100%"
+        draw()
       }
-    }
-
-    handleMotionChange(mediaQuery as unknown as MediaQueryListEvent)
-    mediaQuery.addEventListener("change", handleMotionChange)
-    document.addEventListener("visibilitychange", handleVisibilityChange)
-
-    // Initialize
-    init()
-    resize()
-    animationFrameRef.current = requestAnimationFrame(render)
-
-    // Event listeners
-    window.addEventListener("resize", resize)
-    document.addEventListener("mousedown", handleMouseDown)
-
-    // Cleanup
-    return () => {
-      window.removeEventListener("resize", resize)
-      document.removeEventListener("mousedown", handleMouseDown)
-      document.removeEventListener("visibilitychange", handleVisibilityChange)
-      mediaQuery.removeEventListener("change", handleMotionChange)
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
+      const handleMouseDown = () => {
+        manuallyPaused = !manuallyPaused
+        syncPlayback()
       }
+
+      resize()
+      syncPlayback()
+      window.addEventListener("resize", resize)
+      document.addEventListener("mousedown", handleMouseDown)
+      document.addEventListener("visibilitychange", syncPlayback)
+      mediaQuery.addEventListener("change", syncPlayback)
+
+      return () => {
+        window.removeEventListener("resize", resize)
+        document.removeEventListener("mousedown", handleMouseDown)
+        document.removeEventListener("visibilitychange", syncPlayback)
+        mediaQuery.removeEventListener("change", syncPlayback)
+        releaseResources()
+      }
+    } catch (error) {
+      releaseResources()
+      throw error
     }
   }, [])
 

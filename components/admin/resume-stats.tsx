@@ -2,10 +2,11 @@
 
 import { useMemo } from "react";
 import { m, useReducedMotion } from "framer-motion";
-import { HardDrive, Clock, CheckCircle2 } from "lucide-react";
+import { HardDrive, CheckCircle2, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { AnimatedNumber } from "@/components/ui/transition-primitives";
-import { useResumeManagerStore } from "@/stores";
+import { AnimatedNumber } from "@/components/ui/animated-value";
+import { useResumeManagerStore } from "./resume-manager-store";
+import { formatFileSize } from "./resume-format";
 
 const CONTAINER_VARIANTS = {
   hidden: { opacity: 0 },
@@ -18,13 +19,6 @@ const ITEM_VARIANTS = {
 } as const;
 
 const REDUCED_MOTION_VARIANTS = {} as const;
-
-function formatFileSize(bytes?: number | null) {
-  if (!bytes) return "Unknown size";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 export function ResumeStats() {
   const resumes = useResumeManagerStore((state) => state.resumes);

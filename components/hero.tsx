@@ -1,23 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useMountedReveal } from "@/components/ui/transition-primitives";
+import { useMountedReveal } from "@/components/ui/reveal";
 import { InstantHighlighter } from "@/components/fancy/text/instant-highlighter";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { ChevronDown } from "lucide-react";
 import { usePortfolioSounds } from "@/components/sound-effects";
+import { scrollToSection } from "./navigation-sections";
 
 export function Hero({ isResumeVisible, resumePath }: { isResumeVisible: boolean; resumePath: string | null }) {
   const isShown = useMountedReveal();
   const { playClick, playSlideDown } = usePortfolioSounds();
-  const scrollToExperience = () => {
-    const experienceSection = document.getElementById("experience");
-    if (experienceSection) {
-      const offset = 40;
-      const y = experienceSection.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
-    }
-  };
 
   return (
     <section
@@ -26,7 +19,6 @@ export function Hero({ isResumeVisible, resumePath }: { isResumeVisible: boolean
     >
       <div className="relative z-10 container mx-auto px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className={`mx-auto max-w-5xl text-center t-stagger ${isShown ? "is-shown" : ""}`}>
-          {/* Heading */}
           <h1 className="t-stagger-line t-stagger-line--1 text-6xl tracking-tighter text-balance sm:text-6xl md:text-7xl lg:text-7xl font-bold mb-6 text-foreground drop-shadow-lg">
             <span className="relative inline-flex flex-wrap items-center justify-center gap-2">
               <span className="text-foreground drop-shadow-md">
@@ -95,7 +87,6 @@ export function Hero({ isResumeVisible, resumePath }: { isResumeVisible: boolean
             </span>
           </p>
 
-          {/* CTA Buttons */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             {isResumeVisible && resumePath && (
               <InteractiveHoverButton
@@ -112,11 +103,10 @@ export function Hero({ isResumeVisible, resumePath }: { isResumeVisible: boolean
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <button
         onClick={() => {
           playSlideDown();
-          scrollToExperience();
+          scrollToSection("experience");
         }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 group cursor-pointer"
         aria-label="Scroll to experience"

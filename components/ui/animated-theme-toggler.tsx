@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { Moon, Sun } from "lucide-react";
-import { flushSync } from "react-dom";
 import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
@@ -15,42 +14,20 @@ type Props = {
 export const AnimatedThemeToggler = ({ className }: Props) => {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const { playToggleOn, playToggleOff } = usePortfolioSounds();
 
-  const toggleTheme = useCallback(async () => {
-    if (!buttonRef.current) return;
+  const toggleTheme = useCallback(() => {
     if (isDark) {
       playToggleOff();
     } else {
       playToggleOn();
     }
 
-    // Type assertion for View Transition API
-    const doc = document as Document & {
-      startViewTransition?: (callback: () => void) => { ready: Promise<void> };
-    };
-
-    const updateTheme = () => {
-      flushSync(() => {
-        setTheme(isDark ? "light" : "dark");
-      });
-    };
-
-    if (doc.startViewTransition) {
-      const transition = doc.startViewTransition(updateTheme);
-      await transition.ready;
-    } else {
-      updateTheme();
-      return;
-    }
-
-    
+    setTheme(isDark ? "light" : "dark");
   }, [setTheme, isDark, playToggleOn, playToggleOff]);
 
   return (
     <button
-      ref={buttonRef}
       onClick={toggleTheme}
       className={cn(className)}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}

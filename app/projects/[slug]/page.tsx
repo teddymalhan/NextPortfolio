@@ -2,7 +2,7 @@ import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getProjectBySlug, getAllProjects } from "@/lib/projects";
-import { ProjectDetailPage } from "@/components/project-detail";
+import { ProjectDetailPage } from "@/components/project-detail/project-detail-page";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${project.title} | Teddy Malhan`,
+    title: project.title,
     description: project.description,
     openGraph: {
       title: project.title,

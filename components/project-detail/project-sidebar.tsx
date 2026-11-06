@@ -1,16 +1,14 @@
 "use client";
 
 import { m, useReducedMotion } from "framer-motion";
-import { ExternalLink, Github, Youtube, FileText, Play } from "lucide-react";
+import { ExternalLink, Github, FileText } from "lucide-react";
 import type { Project, ProjectLink } from "@/lib/projects";
 import { usePortfolioSounds } from "@/components/sound-effects";
 
 const iconMap = {
   ExternalLink,
   Github,
-  Youtube,
   FileText,
-  Play,
 };
 
 interface ProjectSidebarProps {
@@ -44,7 +42,6 @@ export function ProjectSidebar({ project }: ProjectSidebarProps) {
       transition={{ duration: 0.5, delay: 0.4 }}
       className="space-y-8"
     >
-      {/* Timeline */}
       {project.timeline.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-foreground mb-4">
@@ -54,14 +51,12 @@ export function ProjectSidebar({ project }: ProjectSidebarProps) {
             {project.timeline.map((entry) => (
               <div key={entry.date} className="text-muted-foreground">
                 <span className="font-medium text-foreground">{entry.date}</span>
-                {entry.event && <span className="ml-2">- {entry.event}</span>}
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Tools */}
       {project.tools.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-foreground mb-4">Tools</h3>
@@ -75,7 +70,6 @@ export function ProjectSidebar({ project }: ProjectSidebarProps) {
         </div>
       )}
 
-      {/* Links */}
       {project.links.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-foreground mb-4">Links</h3>

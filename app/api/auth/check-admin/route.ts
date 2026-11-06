@@ -1,20 +1,20 @@
 import { connection } from 'next/server'
-import { isAuthorizedAdmin } from '@/lib/auth'
+import { getAdminUserId } from '@/lib/auth'
 import { createErrorResponse, createSuccessResponse, logError } from '@/lib/api-response'
 import { capturePostHogEvent } from '@/lib/posthog-server'
 
 export async function GET() {
   await connection()
   try {
-    const authorized = await isAuthorizedAdmin()
+    const userId = await getAdminUserId()
+    const authorized = userId !== null
 
     await capturePostHogEvent('api_auth_check_admin', {
       endpoint: '/api/auth/check-admin',
       method: 'GET',
       authorized,
-    })
+    }, userId ?? 'anonymous')
 
-    // Only return authorization status, no user details
     return createSuccessResponse({ authorized })
   } catch (error) {
     logError('GET /api/auth/check-admin', error)

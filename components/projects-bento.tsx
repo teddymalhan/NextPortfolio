@@ -8,21 +8,21 @@ import { m, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
-import { getBentoProjects } from "@/lib/projects";
+import type { ProjectCard } from "@/lib/projects";
 import { usePageTransition } from "@/components/page-transition";
-import { useAvatarGroup } from "@/components/ui/transition-primitives";
+import { useAvatarGroup } from "@/components/ui/avatar-group";
 
 function ProjectTags({ tags }: { tags: string[] }) {
-  const avatarGroup = useAvatarGroup();
+  const { groupRef, onGroupMouseLeave, getAvatarProps } = useAvatarGroup();
 
   return (
     <div
-      ref={avatarGroup.groupRef}
-      onMouseLeave={avatarGroup.onGroupMouseLeave}
+      ref={groupRef}
+      onMouseLeave={onGroupMouseLeave}
       className="t-avatar-group mt-auto flex flex-wrap gap-2"
     >
       {tags.map((t, index) => (
-        <span key={t} className="t-avatar" {...avatarGroup.getAvatarProps(index)}>
+        <span key={t} className="t-avatar" {...getAvatarProps(index)}>
           <Badge
             variant="secondary"
             className="rounded-full px-3 py-1 text-xs font-normal bg-muted text-muted-foreground border-0"
@@ -35,8 +35,7 @@ function ProjectTags({ tags }: { tags: string[] }) {
   );
 }
 
-export function ProjectsBento() {
-  const projects = getBentoProjects();
+export function ProjectsBento({ projectCards }: { projectCards: ProjectCard[] }) {
   const prefersReducedMotion = useReducedMotion();
   const { navigateTo } = usePageTransition();
 
@@ -57,23 +56,19 @@ export function ProjectsBento() {
         </div>
 
         <BentoGrid>
-          {projects.map((project) => {
-            const tags = project.technologies.slice(0, 3);
+          {projectCards.map((project) => {
             return (
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
                 className="contents"
                 onClick={(e) => {
+                  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
                   e.preventDefault();
-                  try {
-                    sessionStorage.setItem("homeScrollPosition", window.pageYOffset.toString());
-                  } catch {}
                   navigateTo(`/projects/${project.slug}`, "forward");
                 }}
               >
                 <BentoCard
-                  name={project.name}
                   className={cn(
                     "t-resize bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer",
                     project.gridClassName
@@ -85,7 +80,7 @@ export function ProjectsBento() {
                         alt={project.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className={`${project.heroImageFit === "contain" ? "object-contain p-6" : "object-cover"} transition-transform duration-500 group-hover:scale-[1.03]`}
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                         quality={90}
                         loading={project.cardImageLoading ?? "lazy"}
                         decoding="async"
@@ -105,7 +100,7 @@ export function ProjectsBento() {
                       {project.description}
                     </p>
 
-                    <ProjectTags tags={tags} />
+                    <ProjectTags tags={project.tags} />
                   </div>
                 </BentoCard>
               </Link>

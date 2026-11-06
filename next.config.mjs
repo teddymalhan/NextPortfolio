@@ -2,17 +2,32 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 
+const analyticsHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+const analyticsOrigins = new Set();
+if (analyticsHost && !analyticsHost.startsWith('/')) {
+  const host = new URL(analyticsHost);
+  analyticsOrigins.add(host.origin);
+  // The SDK routes cloud ingestion and lazy assets to region-specific hosts.
+  const cloudRegion = host.hostname.match(/^(app|us|us-assets|eu|eu-assets)(?:\.i)?\.posthog\.com$/);
+  if (cloudRegion && host.protocol === 'https:') {
+    const region = cloudRegion[1].startsWith('eu') ? 'eu' : 'us';
+    analyticsOrigins.add(`https://${region}.i.posthog.com`);
+    analyticsOrigins.add(`https://${region}-assets.i.posthog.com`);
+  }
+}
+const analyticsSources = [...analyticsOrigins].join(' ');
+
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca https://vitals.vercel-insights.com https://vercel.live https://va.vercel-scripts.com blob:",
+      `script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca https://vitals.vercel-insights.com https://vercel.live https://va.vercel-scripts.com ${analyticsSources} blob:`,
       "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: https: blob:",
-      "connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca https://vitals.vercel-insights.com https://vercel.live https://*.vercel-storage.com https://clerk-telemetry.com",
+      `connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca https://vitals.vercel-insights.com https://vercel.live https://*.vercel-storage.com https://clerk-telemetry.com ${analyticsSources}`,
       "frame-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca https://vercel.live https://*.vercel-storage.com",
       "object-src 'none'",
       "base-uri 'self'",
@@ -55,10 +70,6 @@ const nextConfig = {
       },
     ];
   },
-  typescript: {
-    ignoreBuildErrors: false,
-  },
-  // Image optimization configuration
   images: {
     remotePatterns: [
       {
@@ -88,9 +99,7 @@ const nextConfig = {
     // Extended cache for static images (24 hours)
     minimumCacheTTL: 86400,
   },
-  // Compression
-  compress: true,
-  // Turbopack config (Next.js 16 uses Turbopack by default)
+  // Next requires an explicit Turbopack choice when a webpack override also exists.
   turbopack: {},
   // Keep webpack config for explicit webpack builds
   webpack: (config) => {
@@ -103,16 +112,12 @@ const nextConfig = {
     };
     return config;
   },
-  // Experimental optimizations
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'framer-motion'],
-    // SSG performance optimizations
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
     optimizeCss: true,
     optimizeServerReact: true,
   },
-  // Compiler options to target modern browsers and reduce legacy JavaScript
   compiler: {
-    // Remove console.log in production
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,

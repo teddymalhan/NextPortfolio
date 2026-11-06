@@ -195,10 +195,37 @@ const termPattern = new RegExp(
   "gi"
 );
 
-type ExplainedText = string | { text: string; term: TechnicalTerm };
+export type ExplainedText = string | { text: string; term: TechnicalTerm };
 
-// Explain only the first mention per section; leave the original prose intact.
-export function explainTechnicalTerms(text: string, seen: Set<string>): ExplainedText[] {
+export interface PreparedSection {
+  id: string;
+  title: string;
+  paragraphs: ExplainedText[][];
+}
+
+export function prepareWriteup(sections: { title: string; paragraphs: string[] }[]): {
+  sections: PreparedSection[];
+  termImageSources: string[];
+} {
+  const images = new Set<string>();
+  const preparedSections = sections.map((section) => {
+    const seen = new Set<string>();
+    return {
+      id: section.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+      title: section.title,
+      paragraphs: section.paragraphs.map((paragraph) => {
+        const parts = explainTechnicalTerms(paragraph, seen);
+        for (const part of parts) {
+          if (typeof part !== "string") images.add(part.term.image.src);
+        }
+        return parts;
+      }),
+    };
+  });
+  return { sections: preparedSections, termImageSources: [...images] };
+}
+
+function explainTechnicalTerms(text: string, seen: Set<string>): ExplainedText[] {
   const parts: ExplainedText[] = [];
   let offset = 0;
 

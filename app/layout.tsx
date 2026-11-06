@@ -8,12 +8,11 @@ import { MotionProvider } from "@/components/motion-provider"
 import { PageTransitionProvider } from "@/components/page-transition"
 import { PortfolioSoundProvider } from "@/components/sound-effects"
 import { ScrollBounceGuard } from "@/components/scroll-bounce-guard"
+import { site } from "@/lib/site"
 import "./globals.css"
 
-// Lazy load analytics to defer non-critical scripts
 const DeferredAnalytics = lazy(() => import("@/components/deferred-analytics"))
 
-// Display font for headings - bold, distinctive
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
@@ -23,7 +22,6 @@ const plusJakarta = Plus_Jakarta_Sans({
   weight: ["400", "500", "600", "700", "800"],
 })
 
-// Body font for text - clean, readable
 const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
@@ -35,11 +33,10 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: "Teddy Malhan",
-    template: "%s | Teddy Malhan",
+    default: site.name,
+    template: `%s | ${site.name}`,
   },
-  description:
-    "Software Engineer with experience at EA and Dialpad. Computer Science student at Simon Fraser University.",
+  description: site.description,
   keywords: [
     "Teddy Malhan",
     "Software Engineer",
@@ -51,12 +48,12 @@ export const metadata: Metadata = {
     "Dialpad",
     "Portfolio",
   ],
-  authors: [{ name: "Teddy Malhan" }],
-  creator: "Teddy Malhan",
+  authors: [{ name: site.name }],
+  creator: site.name,
   generator: "Next.js",
   applicationName: "Teddy Malhan Portfolio",
   referrer: "origin-when-cross-origin",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://malhan.ca"),
+  metadataBase: new URL(site.url),
   alternates: {
     canonical: "/",
   },
@@ -65,24 +62,22 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: "Teddy Malhan Portfolio",
-    title: "Teddy Malhan - Software Engineer",
-    description:
-      "Software Engineer with experience at EA and Dialpad. Computer Science student at Simon Fraser University.",
+    title: site.title,
+    description: site.description,
     images: [
       {
-        url: "/ted-aboutme.jpg",
+        url: site.portrait,
         width: 1200,
         height: 630,
-        alt: "Teddy Malhan",
+        alt: site.name,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Teddy Malhan - Software Engineer",
-    description:
-      "Software Engineer with experience at EA and Dialpad. Computer Science student at Simon Fraser University.",
-    images: ["/ted-aboutme.jpg"],
+    title: site.title,
+    description: site.description,
+    images: [site.portrait],
     creator: "@teddymalhan",
   },
   robots: {
@@ -118,21 +113,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://malhan.ca"
+  const siteUrl = site.url
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Teddy Malhan",
+    name: site.name,
     jobTitle: "Software Engineer",
-    description:
-      "Software Engineer with experience at EA and Dialpad. Computer Science student at Simon Fraser University.",
+    description: site.description,
     url: siteUrl,
-    image: `${siteUrl}/ted-aboutme.jpg`,
-    sameAs: [
-      "https://github.com/teddymalhan",
-      "https://linkedin.com/in/teddymalhan",
-    ],
+    image: `${siteUrl}${site.portrait}`,
+    sameAs: [site.links.github, site.links.linkedin],
     alumniOf: {
       "@type": "EducationalOrganization",
       name: "Simon Fraser University",
@@ -161,12 +152,7 @@ export default function RootLayout({
           {JSON.stringify(structuredData)}
         </Script>
         <Suspense fallback={null}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           <MotionProvider>
             <PortfolioSoundProvider>
               <PageTransitionProvider>

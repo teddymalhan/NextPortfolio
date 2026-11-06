@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense, lazy } from "react";
 import { ArrowLeft } from "lucide-react";
 import type { Project } from "@/lib/projects";
 import { ProjectHeader } from "./project-header";
@@ -10,11 +9,6 @@ import { ContentSection } from "./content-section";
 import { TableOfContents } from "./table-of-contents";
 import { usePageTransition } from "@/components/page-transition";
 import { TermImagePreloader } from "./term-image-preloader";
-
-// Lazy load heavier components
-const DemoSection = lazy(() =>
-  import("./demo-section").then((m) => ({ default: m.DemoSection }))
-);
 
 interface ProjectDetailPageProps {
   project: Project;
@@ -29,7 +23,6 @@ export function ProjectDetailPage({ project }: ProjectDetailPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Back button */}
       <div className="max-w-6xl mx-auto px-6 pt-8 pb-4">
         <button
           onClick={handleBackClick}
@@ -45,37 +38,16 @@ export function ProjectDetailPage({ project }: ProjectDetailPageProps) {
 
         <ProjectHero project={project} />
 
-        {/* Demo Video/GIF */}
-        {project.demoMedia && (
-          <Suspense
-            fallback={
-              <div className="aspect-video bg-muted rounded-xl animate-pulse my-16" />
-            }
-          >
-            <DemoSection media={project.demoMedia} />
-          </Suspense>
-        )}
-
-        {/* Table of Contents - Mobile Only */}
-        <TableOfContents sections={project.sections} variant="mobile" />
-
-        {/* Main Content with Sidebars */}
-        <div className="grid lg:grid-cols-[240px_1fr_280px] gap-8 lg:gap-12">
-          {/* Table of Contents - Desktop Only */}
-          <TableOfContents sections={project.sections} variant="desktop" />
-
-          {/* Main Content */}
-          <TermImagePreloader sections={project.sections}>
+        <TableOfContents sections={project.sections}>
+          <TermImagePreloader sources={project.termImageSources}>
             <main>
               {project.sections.map((section, i) => (
-                <ContentSection key={section.title} section={section} index={i} />
+                <ContentSection key={section.id} section={section} index={i} />
               ))}
             </main>
           </TermImagePreloader>
-
-          {/* Project Info Sidebar */}
           <ProjectSidebar project={project} />
-        </div>
+        </TableOfContents>
       </div>
     </div>
   );
